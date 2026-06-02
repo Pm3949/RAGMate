@@ -9,4 +9,5 @@ python-dotenv==1.2.2
 python_docx==1.2.0
 Requests==2.34.2
 sentence_transformers==5.5.1
-uvicorn==0.48.0
+gunicorn
+uvicorn
