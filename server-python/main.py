@@ -653,7 +653,7 @@ async def chat_with_agent(req: ChatRequest):
         cursor = conn.cursor()
 
         cursor.execute(
-            "SELECT user_id, name, system_prompt, provider, model, api_key, embedding_model FROM agents WHERE id = %s",
+            "SELECT user_id, name, system_prompt, llm_provider, llm_model, api_key, embedding_model FROM agents WHERE id = %s",
             (req.agent_id,)
         )
         agent_data = cursor.fetchone()
