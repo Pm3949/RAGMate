@@ -21,8 +21,8 @@ export default function EmptyState({
         h-20
         w-20
         rounded-full
-        bg-[rgba(255,77,0,0.14)]
-        dark:bg-[rgba(255,77,0,0.15)]
+        bg-indigo-100
+        dark:bg-indigo-500/15
         flex
         items-center
         justify-center
@@ -30,7 +30,7 @@ export default function EmptyState({
       "
       >
         <Sparkles
-          className="text-[var(--primary)] dark:text-orange-300"
+          className="text-indigo-600 dark:text-indigo-300"
           size={32}
         />
       </div>

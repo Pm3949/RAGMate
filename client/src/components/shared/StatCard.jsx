@@ -7,11 +7,9 @@ export default function StatCard({
     <div
       className="
       bg-white
-      dark:bg-zinc-900
       rounded-3xl
       border
       border-slate-200
-      dark:border-zinc-800
       p-6
     "
     >
@@ -24,7 +22,6 @@ export default function StatCard({
         <span
           className="
           text-slate-500
-          dark:text-zinc-400
         "
         >
           {title}
@@ -33,7 +30,7 @@ export default function StatCard({
         <Icon
           size={18}
           className="
-          text-[var(--primary)]
+          text-indigo-600
         "
         />
       </div>
@@ -43,8 +40,6 @@ export default function StatCard({
         mt-4
         text-4xl
         font-bold
-        text-slate-900
-        dark:text-zinc-50
       "
       >
         {value}

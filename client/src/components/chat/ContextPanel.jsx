@@ -14,13 +14,13 @@ export default function ContextPanel({
   isLoading = false,
 }) {
   return (
-    <div className="hidden w-80 border-l border-border bg-card xl:block">
+    <div className="hidden w-80 border-l border-slate-200 bg-white dark:border-zinc-800 dark:bg-zinc-950 xl:block">
       <div className="p-6">
-        <h3 className="font-semibold text-lg text-foreground">
+        <h3 className="font-semibold text-lg text-slate-950 dark:text-zinc-50">
           Context
         </h3>
 
-        <p className="text-sm text-muted-foreground mt-1">
+        <p className="text-sm text-slate-500 mt-1 dark:text-zinc-400">
           Sources used by the agent
         </p>
       </div>
@@ -28,13 +28,13 @@ export default function ContextPanel({
       <div className="px-4 space-y-3">
         {isLoading && (
           <>
-            <div className="h-20 rounded-2xl bg-muted animate-pulse" />
-            <div className="h-20 rounded-2xl bg-muted animate-pulse" />
+            <div className="h-20 rounded-2xl bg-slate-100 animate-pulse dark:bg-zinc-800" />
+            <div className="h-20 rounded-2xl bg-slate-100 animate-pulse dark:bg-zinc-800" />
           </>
         )}
 
         {!isLoading && documents.length === 0 && (
-          <div className="border border-dashed rounded-2xl p-4 text-sm text-muted-foreground border-border">
+          <div className="border border-dashed rounded-2xl p-4 text-sm text-slate-500 dark:border-zinc-800 dark:text-zinc-400">
             No sources available for this agent.
           </div>
         )}
@@ -48,16 +48,16 @@ export default function ContextPanel({
             return (
               <div
                 key={document.id}
-                className="border border-border rounded-2xl p-4 transition hover:bg-muted"
+                className="border border-slate-200 rounded-2xl p-4 transition hover:bg-slate-50 dark:border-zinc-800 dark:hover:bg-zinc-900"
               >
                 <div className="flex gap-3">
-                  <Icon size={18} className="text-muted-foreground" />
+                  <Icon size={18} className="text-slate-500 dark:text-zinc-400" />
                   <div className="min-w-0">
-                    <div className="font-medium truncate text-foreground">
+                    <div className="font-medium truncate text-slate-900 dark:text-zinc-100">
                       {document.filename}
                     </div>
 
-                    <div className="text-xs text-muted-foreground capitalize">
+                    <div className="text-xs text-slate-500 capitalize dark:text-zinc-400">
                       {document.status || "available"}
                     </div>
                   </div>

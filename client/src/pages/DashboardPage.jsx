@@ -11,7 +11,6 @@ import { useUIStore } from "../store/useUIStore";
 
 export default function DashboardPage() {
   const { user } = useAuth();
-  const activeWorkspaceId = useUIStore((state) => state.activeWorkspaceId);
   const { sessions = [] } = useChat();
   const { notes = [] } = useNotes();
   const setCreateAgentWizardOpen = useUIStore(
@@ -20,7 +19,7 @@ export default function DashboardPage() {
   const {
     data: agents = [],
     isLoading: isLoadingAgents,
-  } = useAgents(activeWorkspaceId);
+  } = useAgents(user?.id);
   const totalMessages = sessions.reduce(
     (count, session) => count + session.messages.length,
     0,

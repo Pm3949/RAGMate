@@ -11,7 +11,7 @@ export default function MobileSidebar() {
     <div className="fixed inset-0 z-[90] lg:hidden">
       <button
         aria-label="Close navigation"
-        className="absolute inset-0 bg-slate-950/40 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
         onClick={() => setSidebarOpen(false)}
       />
 

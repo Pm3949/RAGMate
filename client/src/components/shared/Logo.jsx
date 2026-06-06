@@ -13,8 +13,8 @@ export default function Logo() {
         w-10
         rounded-2xl
         bg-gradient-to-br
-        from-[var(--primary)]
-        to-[var(--primary-hover)]
+        from-indigo-600
+        to-violet-600
         text-white
         flex
         items-center

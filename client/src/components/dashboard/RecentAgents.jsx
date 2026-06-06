@@ -10,18 +10,23 @@ export default function RecentAgents({
   return (
     <div
       className="
-      glass-card
+      bg-white
+      dark:bg-zinc-900
+      rounded-2xl
+      border
+      border-slate-200
+      dark:border-zinc-800
       p-6
     "
     >
       <div className="flex justify-between mb-6">
-        <h3 className="font-semibold text-lg text-foreground">
+        <h3 className="font-semibold text-lg">
           Recent Agents
         </h3>
 
         <Link
           to="/agents"
-          className="text-primary hover:text-primary-hover transition-colors text-sm"
+          className="text-indigo-600 dark:text-indigo-300"
         >
           View All
         </Link>
@@ -37,7 +42,7 @@ export default function RecentAgents({
         )}
 
         {!isLoading && recentAgents.length === 0 && (
-          <div className="rounded-2xl border border-dashed border-border p-6 text-sm text-muted-foreground">
+          <div className="rounded-2xl border border-dashed border-slate-200 p-6 text-sm text-slate-500 dark:border-zinc-800 dark:text-zinc-400">
             No agents created yet.
           </div>
         )}
@@ -52,8 +57,8 @@ export default function RecentAgents({
             gap-4
             p-4
             rounded-2xl
-            hover:bg-muted
-            transition-colors
+            hover:bg-slate-50
+            dark:hover:bg-zinc-800
           "
           >
             <div
@@ -61,21 +66,22 @@ export default function RecentAgents({
               h-12
               w-12
               rounded-2xl
-              bg-primary/10
+              bg-indigo-100
+              dark:bg-indigo-500/15
               flex
               items-center
               justify-center
             "
             >
-              <Bot className="text-[var(--primary)]" />
+              <Bot className="text-indigo-600" />
             </div>
 
             <div>
-              <div className="font-medium text-foreground">
+              <div className="font-medium">
                 {agent.name}
               </div>
 
-              <div className="text-sm text-muted-foreground">
+              <div className="text-sm text-slate-500 dark:text-zinc-400">
                 {agent.model}
               </div>
             </div>

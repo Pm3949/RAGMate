@@ -18,22 +18,29 @@ export default function KPICard({
         y: -4,
       }}
       className="
-      glass-card
+      bg-white
+      dark:bg-zinc-900
+      rounded-2xl
+      border
+      border-slate-200
+      dark:border-zinc-800
       p-6
+      shadow-sm
+      transition-colors
     "
     >
       <div className="flex justify-between">
-        <span className="text-muted-foreground text-sm">
+        <span className="text-slate-500 dark:text-zinc-400 text-sm">
           {title}
         </span>
 
         <Icon
           size={20}
-          className="text-[var(--primary)]"
+          className="text-indigo-600"
         />
       </div>
 
-      <div className="mt-4 text-4xl font-bold text-foreground">
+      <div className="mt-4 text-4xl font-bold text-slate-950 dark:text-zinc-50">
         {value}
       </div>
 
@@ -49,10 +56,10 @@ export default function KPICard({
         h-10
         rounded-xl
         bg-gradient-to-r
-        from-primary/5
-        to-primary/10
-        dark:from-primary/10
-        dark:to-primary/20
+        from-indigo-50
+        to-indigo-100
+        dark:from-indigo-500/10
+        dark:to-cyan-500/10
       "
       />
     </motion.div>

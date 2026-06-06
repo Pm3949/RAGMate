@@ -33,11 +33,6 @@ export default function AppHeader({
   const avatarInitial = displayName
     .charAt(0)
     .toUpperCase();
-  const commandShortcut =
-    typeof navigator !== "undefined" &&
-    /mac|iphone|ipad/i.test(navigator.platform)
-      ? "Cmd K"
-      : "Ctrl K";
 
   const handleSignOut = async () => {
     try {
@@ -54,14 +49,17 @@ export default function AppHeader({
   return (
     <header
       className="
-    h-20
-    glass
-    sticky
-    top-0
-    z-40
-    border-b
-    border-border
-  "
+   h-20
+   bg-white/80
+   dark:bg-zinc-950/80
+   backdrop-blur-xl
+   border-b
+   border-slate-200
+   dark:border-zinc-800
+   sticky
+   top-0
+   z-40
+ "
     >
       {" "}
       <div className="h-full px-8 flex items-center justify-between">
@@ -75,13 +73,15 @@ export default function AppHeader({
             w-11
             rounded-xl
             border
-            border-border
-            text-muted-foreground
+            border-slate-200
+            dark:border-zinc-800
+            text-slate-600
+            dark:text-zinc-300
             flex
             items-center
             justify-center
-            hover:bg-muted
-            hover:text-foreground
+            hover:bg-slate-50
+            dark:hover:bg-zinc-900
             lg:hidden
           "
           >
@@ -95,25 +95,30 @@ export default function AppHeader({
           absolute
           left-4
           top-4
-          text-muted-foreground
+          text-slate-400
+          dark:text-zinc-500
         "
             />
 
             <input
               placeholder="Search agents, documents, chats..."
               className="
-          bg-muted
+          w-full
+          bg-slate-50
+          dark:bg-zinc-900
           border
-          border-border
-          text-foreground
+          border-slate-200
+          dark:border-zinc-800
+          text-slate-900
+          dark:text-zinc-50
           rounded-2xl
           py-3
           pl-11
           pr-16
           outline-none
           focus:ring-2
-          focus:ring-primary/30
-          placeholder:text-muted-foreground
+          focus:ring-indigo-500/20
+          dark:placeholder:text-zinc-500
         "
             />
 
@@ -125,14 +130,17 @@ export default function AppHeader({
           px-2.5
           py-1
           rounded-lg
-          bg-card
+          bg-white
+          dark:bg-zinc-950
           border
-          border-border
+          border-slate-200
+          dark:border-zinc-800
           text-xs
-          text-muted-foreground
+          text-slate-500
+          dark:text-zinc-400
         "
             >
-              {commandShortcut}
+              ⌘K
             </div>
           </div>
         </div>
@@ -148,13 +156,15 @@ export default function AppHeader({
         w-11
         rounded-xl
         border
-        border-border
-        text-muted-foreground
+        border-slate-200
+        dark:border-zinc-800
+        text-slate-600
+        dark:text-zinc-300
         flex
         items-center
         justify-center
-        hover:bg-muted
-        hover:text-foreground
+        hover:bg-slate-50
+        dark:hover:bg-zinc-900
         transition-all
         "
           >
@@ -171,13 +181,15 @@ export default function AppHeader({
         w-11
         rounded-xl
         border
-        border-border
-        text-muted-foreground
+        border-slate-200
+        dark:border-zinc-800
+        text-slate-600
+        dark:text-zinc-300
         flex
         items-center
         justify-center
-        hover:bg-muted
-        hover:text-foreground
+        hover:bg-slate-50
+        dark:hover:bg-zinc-900
       "
           >
             <Bell size={18} />
@@ -205,13 +217,15 @@ export default function AppHeader({
         px-4
         rounded-xl
         border
-        border-border
-        text-muted-foreground
+        border-slate-200
+        dark:border-zinc-800
+        text-slate-700
+        dark:text-zinc-200
         flex
         items-center
         gap-2
-        hover:bg-muted
-        hover:text-foreground
+        hover:bg-slate-50
+        dark:hover:bg-zinc-900
       "
           >
             <Command size={16} />
@@ -236,8 +250,8 @@ export default function AppHeader({
           h-10
           w-10
           rounded-xl
-          bg-primary
-          text-primary-foreground
+          bg-indigo-600
+          text-white
           flex
           items-center
           justify-center
@@ -248,11 +262,11 @@ export default function AppHeader({
             </div>
 
             <div className="text-left">
-              <div className="text-sm font-medium text-foreground">
+              <div className="text-sm font-medium text-slate-900 dark:text-zinc-50">
                 {displayName}
               </div>
 
-              <div className="text-xs text-muted-foreground">
+              <div className="text-xs text-slate-500 dark:text-zinc-400">
                 {user?.email}
               </div>
             </div>
@@ -267,9 +281,10 @@ export default function AppHeader({
               flex
               items-center
               justify-center
-              hover:bg-muted
-              text-muted-foreground
-              hover:text-foreground
+              hover:bg-slate-100
+              dark:hover:bg-zinc-900
+              text-slate-600
+              dark:text-zinc-300
             "
               title="Sign out"
             >

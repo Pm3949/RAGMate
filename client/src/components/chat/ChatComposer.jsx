@@ -28,8 +28,10 @@ export default function ChatComposer({
     <div
       className="
       border-t
-      border-border
-      bg-card
+      border-slate-200
+      dark:border-zinc-800
+      bg-white
+      dark:bg-zinc-950
       p-5
     "
     >
@@ -37,8 +39,10 @@ export default function ChatComposer({
         className="
         rounded-[32px]
         border
-        border-border
-        bg-background
+        border-slate-200
+        dark:border-zinc-800
+        bg-white
+        dark:bg-zinc-900
         shadow-lg
         p-3
         flex
@@ -61,15 +65,17 @@ export default function ChatComposer({
           border-none
           outline-none
           bg-transparent
-          text-foreground
-          placeholder:text-muted-foreground
+          text-slate-950
+          dark:text-zinc-50
+          dark:placeholder:text-zinc-500
           px-3
           py-2
           disabled:opacity-60
           transition
+          hover:bg-indigo-700
           focus:outline-none
           focus:ring-2
-          focus:ring-primary/30
+          focus:ring-indigo-500/30
         "
         />
 
@@ -84,7 +90,8 @@ export default function ChatComposer({
           h-11
           w-11
           rounded-2xl
-          btn-primary
+          bg-indigo-600
+          text-white
           flex
           items-center
           justify-center

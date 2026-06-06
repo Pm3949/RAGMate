@@ -10,34 +10,33 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import EmptyState from "../components/shared/EmptyState";
 import { useNotes } from "../hooks/useNotes";
-import { useWorkspacePermissions } from "../hooks/useSettings";
 
 const markdownComponents = {
   h1: ({ ...props }) => (
-    <h1 className="mb-3 mt-5 text-2xl font-bold text-foreground" {...props} />
+    <h1 className="mb-3 mt-5 text-2xl font-bold text-slate-950 dark:text-zinc-50" {...props} />
   ),
   h2: ({ ...props }) => (
-    <h2 className="mb-3 mt-5 text-xl font-semibold text-foreground" {...props} />
+    <h2 className="mb-3 mt-5 text-xl font-semibold text-slate-900 dark:text-zinc-100" {...props} />
   ),
   h3: ({ ...props }) => (
-    <h3 className="mb-2 mt-4 text-lg font-semibold text-foreground" {...props} />
+    <h3 className="mb-2 mt-4 text-lg font-semibold text-slate-900 dark:text-zinc-100" {...props} />
   ),
   p: ({ ...props }) => (
     <p
-      className="mb-3 whitespace-pre-wrap break-words text-sm leading-7 text-muted-foreground"
+      className="mb-3 whitespace-pre-wrap break-words text-sm leading-7 text-slate-700 dark:text-zinc-300"
       {...props}
     />
   ),
   ul: ({ ...props }) => (
-    <ul className="mb-4 ml-5 list-disc space-y-1 text-sm text-muted-foreground" {...props} />
+    <ul className="mb-4 ml-5 list-disc space-y-1 text-sm text-slate-700 dark:text-zinc-300" {...props} />
   ),
   ol: ({ ...props }) => (
-    <ol className="mb-4 ml-5 list-decimal space-y-1 text-sm text-muted-foreground" {...props} />
+    <ol className="mb-4 ml-5 list-decimal space-y-1 text-sm text-slate-700 dark:text-zinc-300" {...props} />
   ),
   li: ({ ...props }) => <li className="leading-7" {...props} />,
   blockquote: ({ ...props }) => (
     <blockquote
-      className="mb-4 border-l-4 border-primary bg-primary/5 px-4 py-2 text-sm text-muted-foreground"
+      className="mb-4 border-l-4 border-indigo-200 bg-indigo-50/40 px-4 py-2 text-sm text-slate-700 dark:border-indigo-400/40 dark:bg-indigo-500/10 dark:text-zinc-300"
       {...props}
     />
   ),
@@ -57,7 +56,7 @@ const markdownComponents = {
 
     return (
       <code
-        className="rounded-md bg-muted px-1.5 py-0.5 text-xs font-medium text-foreground"
+        className="rounded-md bg-slate-100 px-1.5 py-0.5 text-xs font-medium text-slate-900 dark:bg-zinc-800 dark:text-zinc-100"
         {...props}
       >
         {children}
@@ -72,15 +71,15 @@ const markdownComponents = {
   ),
   th: ({ ...props }) => (
     <th
-      className="border border-border bg-muted px-3 py-2 text-left font-semibold text-foreground"
+      className="border border-slate-200 bg-slate-50 px-3 py-2 text-left font-semibold text-slate-900 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100"
       {...props}
     />
   ),
   td: ({ ...props }) => (
-    <td className="border border-border px-3 py-2 text-muted-foreground" {...props} />
+    <td className="border border-slate-200 px-3 py-2 text-slate-700 dark:border-zinc-800 dark:text-zinc-300" {...props} />
   ),
   a: ({ ...props }) => (
-    <a className="break-words font-medium text-primary underline" {...props} />
+    <a className="break-words font-medium text-indigo-600 underline dark:text-indigo-300" {...props} />
   ),
 };
 
@@ -122,7 +121,6 @@ function markdownToPrintableHtml(markdown) {
 
 export default function NotesPage() {
   const { notes, deleteNote, togglePin } = useNotes();
-  const { canManageNotes } = useWorkspacePermissions();
   const [query, setQuery] = useState("");
   const [selectedAgentId, setSelectedAgentId] = useState("all");
   const hasNotes = notes.length > 0;
@@ -155,22 +153,23 @@ export default function NotesPage() {
 
     const visibleNotes = search
       ? agentFilteredNotes.filter((note) =>
-        `${note.title} ${note.content} ${note.agentName || ""}`
-          .toLowerCase()
-          .includes(search),
-      )
+          `${note.title} ${note.content} ${note.agentName || ""}`
+            .toLowerCase()
+            .includes(search),
+        )
       : agentFilteredNotes;
 
     return [...visibleNotes].sort(
       (first, second) =>
         Number(Boolean(second.pinned)) - Number(Boolean(first.pinned)) ||
         new Date(second.createdAt).getTime() -
-        new Date(first.createdAt).getTime(),
+          new Date(first.createdAt).getTime(),
     );
   }, [notes, query, selectedAgentId]);
 
   const getNoteMarkdown = (note) =>
-    `# ${getCleanTitle(note.title)}\nAgent: ${note.agentName || "General"
+    `# ${getCleanTitle(note.title)}\nAgent: ${
+      note.agentName || "General"
     }\nSaved: ${new Date(note.createdAt).toLocaleString()}\n\n${note.content}`;
 
   const printPdf = (title, content) => {
@@ -244,11 +243,11 @@ export default function NotesPage() {
     <div>
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-4xl font-bold text-foreground">
+          <h1 className="text-4xl font-bold text-slate-950 dark:text-zinc-50">
             Saved Notes
           </h1>
 
-          <p className="text-muted-foreground mt-2">
+          <p className="text-slate-500 mt-2 dark:text-zinc-400">
             Insights collected from your AI conversations.
           </p>
         </div>
@@ -260,9 +259,9 @@ export default function NotesPage() {
           px-5
           py-3
           rounded-2xl
-          bg-primary
-          text-primary-foreground
-          hover:bg-primary-hover
+          bg-indigo-600
+          text-white
+          hover:bg-indigo-700
           flex
           items-center
           gap-2
@@ -279,10 +278,11 @@ export default function NotesPage() {
           <button
             type="button"
             onClick={() => setSelectedAgentId("all")}
-            className={`rounded-xl px-4 py-2 text-sm font-medium ${selectedAgentId === "all"
-                ? "bg-primary text-primary-foreground"
-                : "border border-border bg-background text-muted-foreground hover:bg-muted"
-              }`}
+            className={`rounded-xl px-4 py-2 text-sm font-medium ${
+              selectedAgentId === "all"
+                ? "bg-slate-900 text-white dark:bg-indigo-500/20 dark:text-indigo-200"
+                : "border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
+            }`}
           >
             All notes
           </button>
@@ -292,10 +292,11 @@ export default function NotesPage() {
               key={agent.id}
               type="button"
               onClick={() => setSelectedAgentId(agent.id)}
-              className={`rounded-xl px-4 py-2 text-sm font-medium ${selectedAgentId === agent.id
-                  ? "bg-primary text-primary-foreground"
-                  : "border border-border bg-background text-muted-foreground hover:bg-muted"
-                }`}
+              className={`rounded-xl px-4 py-2 text-sm font-medium ${
+                selectedAgentId === agent.id
+                  ? "bg-slate-900 text-white dark:bg-indigo-500/20 dark:text-indigo-200"
+                  : "border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
+              }`}
             >
               {agent.name}
             </button>
@@ -309,7 +310,8 @@ export default function NotesPage() {
           absolute
           left-4
           top-4
-          text-muted-foreground
+          text-slate-400
+          dark:text-zinc-500
         "
           size={18}
         />
@@ -323,10 +325,13 @@ export default function NotesPage() {
           w-full
           rounded-2xl
           border
-          border-border
-          bg-background
-          text-foreground
-          placeholder:text-muted-foreground
+          border-slate-200
+          dark:border-zinc-800
+          bg-white
+          dark:bg-zinc-900
+          text-slate-950
+          dark:text-zinc-50
+          dark:placeholder:text-zinc-500
           pl-12
           py-4
           disabled:opacity-60
@@ -354,43 +359,50 @@ export default function NotesPage() {
             <article
               key={note.id}
               className="
-              glass-card
+              rounded-2xl
+              border
+              border-slate-200
+              dark:border-zinc-800
+              bg-white
+              dark:bg-zinc-900
               p-5
+              shadow-sm
             "
             >
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <h2 className="font-semibold text-foreground">
+                  <h2 className="font-semibold text-slate-900 dark:text-zinc-50">
                     {getCleanTitle(note.title)}
                   </h2>
 
-                  <p className="mt-1 text-xs text-muted-foreground">
+                  <p className="mt-1 text-xs text-slate-500 dark:text-zinc-400">
                     Saved {new Date(note.createdAt).toLocaleString()}
                   </p>
                 </div>
 
                 <div className="flex shrink-0 items-center gap-1">
-                  {canManageNotes && (
-                    <button
-                      type="button"
-                      onClick={() => togglePin(note.id)}
-                      className="
-                      rounded-xl
-                      p-2
-                      text-muted-foreground
-                      hover:bg-primary/10
-                      hover:text-primary
-                    "
-                      title={note.pinned ? "Unpin note" : "Pin note"}
-                      aria-pressed={Boolean(note.pinned)}
-                    >
-                      <Pin
-                        size={16}
-                        fill={note.pinned ? "currentColor" : "none"}
-                        className={note.pinned ? "text-primary" : ""}
-                      />
-                    </button>
-                  )}
+                  <button
+                    type="button"
+                    onClick={() => togglePin(note.id)}
+                    className="
+                    rounded-xl
+                    p-2
+                    text-slate-500
+                    hover:bg-indigo-50
+                    hover:text-indigo-600
+                    dark:text-zinc-400
+                    dark:hover:bg-indigo-500/10
+                    dark:hover:text-indigo-300
+                  "
+                    title={note.pinned ? "Unpin note" : "Pin note"}
+                    aria-pressed={Boolean(note.pinned)}
+                  >
+                    <Pin
+                      size={16}
+                      fill={note.pinned ? "currentColor" : "none"}
+                      className={note.pinned ? "text-indigo-600 dark:text-indigo-300" : ""}
+                    />
+                  </button>
 
                   <button
                     type="button"
@@ -398,39 +410,43 @@ export default function NotesPage() {
                     className="
                     rounded-xl
                     p-2
-                    text-muted-foreground
-                    hover:bg-muted
-                    hover:text-foreground
+                    text-slate-500
+                    hover:bg-slate-100
+                    hover:text-slate-900
+                    dark:text-zinc-400
+                    dark:hover:bg-zinc-800
+                    dark:hover:text-zinc-50
                   "
                     title="Download note"
                   >
                     <Download size={16} />
                   </button>
 
-                  {canManageNotes && (
-                    <button
-                      type="button"
-                      onClick={() => deleteNote(note.id)}
-                      className="
-                      rounded-xl
-                      p-2
-                      text-muted-foreground
-                      hover:bg-red-500/10
-                      hover:text-red-600
-                    "
-                      title="Delete note"
-                    >
-                      <Trash2 size={16} />
-                    </button>
-                  )}
+                  <button
+                    type="button"
+                    onClick={() => deleteNote(note.id)}
+                    className="
+                    rounded-xl
+                    p-2
+                    text-slate-500
+                    hover:bg-red-50
+                    hover:text-red-600
+                    dark:text-zinc-400
+                    dark:hover:bg-red-500/10
+                    dark:hover:text-red-300
+                  "
+                    title="Delete note"
+                  >
+                    <Trash2 size={16} />
+                  </button>
                 </div>
               </div>
 
-              <p className="mt-1 text-xs text-muted-foreground">
+              <p className="mt-1 text-xs text-slate-500 dark:text-zinc-400">
                 Agent: {note.agentName || "General"}
               </p>
 
-              <div className="mt-4 min-w-0 overflow-hidden rounded-xl border border-border bg-muted/30 p-4">
+              <div className="mt-4 min-w-0 overflow-hidden rounded-xl border border-slate-100 bg-slate-50/40 p-4 dark:border-zinc-800 dark:bg-zinc-950/50">
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
                   components={markdownComponents}

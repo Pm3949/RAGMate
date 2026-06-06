@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Search,
@@ -73,43 +73,18 @@ export default function CommandPalette() {
     (state) => state.setCreateAgentWizardOpen,
   );
   const [query, setQuery] = useState("");
-  
-  const isMac = typeof navigator !== "undefined" && /mac|iphone|ipad/i.test(navigator.platform || "");
-  const commandShortcut = isMac ? "Cmd K" : "Ctrl K";
-  const modifier = isMac ? "⌥" : "Alt"; // Option on Mac, Alt on Windows
-
-  const handleCommand = (command) => {
-    navigate(command.path);
-    if (command.action === "create-agent") {
-      setCreateAgentWizardOpen(true);
-    }
-    setOpen(false);
-    setQuery("");
-  };
 
   useEffect(() => {
     const handler = (e) => {
-      // Toggle Command Palette (Cmd+K / Ctrl+K)
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+      if (
+        (e.metaKey || e.ctrlKey) &&
+        e.key.toLowerCase() === "k"
+      ) {
         e.preventDefault();
-        setOpen((prev) => !prev);
-        return;
+        setOpen(!open);
       }
 
-      // Handle individual shortcuts (Alt+Key / Option+Key)
-      if (e.altKey) {
-        const command = commands.find(
-          (cmd) => cmd.shortcut.toLowerCase() === e.key.toLowerCase()
-        );
-        if (command) {
-          e.preventDefault();
-          handleCommand(command);
-          return;
-        }
-      }
-
-      // Close Palette on Escape
-      if (e.key === "Escape" && open) {
+      if (e.key === "Escape") {
         setOpen(false);
       }
     };
@@ -123,13 +98,22 @@ export default function CommandPalette() {
       );
   }, [open, setOpen]);
 
-  const filteredCommands = useMemo(
-    () =>
-      commands.filter((command) =>
-        command.label.toLowerCase().includes(query.toLowerCase())
-      ),
-    [query]
+  const filteredCommands = commands.filter((command) =>
+    command.label
+      .toLowerCase()
+      .includes(query.toLowerCase()),
   );
+
+  const handleCommand = (command) => {
+    navigate(command.path);
+
+    if (command.action === "create-agent") {
+      setCreateAgentWizardOpen(true);
+    }
+
+    setOpen(false);
+    setQuery("");
+  };
 
   if (!open) return null;
 
@@ -139,7 +123,7 @@ export default function CommandPalette() {
       fixed
       inset-0
       z-[100]
-      bg-slate-950/40
+      bg-black/40
       backdrop-blur-sm
       flex
       justify-center
@@ -236,10 +220,9 @@ export default function CommandPalette() {
                 text-xs
                 text-slate-500
                 dark:text-zinc-400
-                font-mono
               "
               >
-                {modifier} {item.shortcut}
+                {item.shortcut}
               </div>
             </button>
           ))}
@@ -269,7 +252,7 @@ export default function CommandPalette() {
         >
           <span>Navigate quickly</span>
 
-          <span>{commandShortcut} to open</span>
+          <span>ESC to close</span>
         </div>
       </div>
     </div>

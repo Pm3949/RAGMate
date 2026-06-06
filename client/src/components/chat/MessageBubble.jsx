@@ -5,12 +5,10 @@ import remarkGfm from "remark-gfm";
 
 import { toast } from "sonner";
 import { useNotes } from "../../hooks/useNotes";
-import { useWorkspacePermissions } from "../../hooks/useSettings";
 
 export default function MessageBubble({ role, content, agent }) {
   const isUser = role === "user";
   const { addNote, isSaved } = useNotes();
-  const { canManageNotes } = useWorkspacePermissions();
   const saved = isSaved(content, agent?.id || null);
 
   const handleCopy = async () => {
@@ -43,8 +41,8 @@ export default function MessageBubble({ role, content, agent }) {
           h-10
           w-10
           rounded-2xl
-          bg-primary
-          text-primary-foreground
+          bg-indigo-600
+          text-white
           flex
           items-center
           justify-center
@@ -64,12 +62,12 @@ export default function MessageBubble({ role, content, agent }) {
         group
         ${
           isUser
-            ? "bg-primary text-primary-foreground"
-            : "bg-card border border-border text-foreground"
+            ? "bg-slate-900 text-white dark:bg-indigo-600"
+            : "bg-white border border-slate-200 text-slate-900 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50"
         }
       `}
       >
-        <div className="prose max-w-none text-inherit dark:prose-invert">
+        <div className="prose max-w-none prose-slate dark:prose-invert">
           <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
         </div>
         {!isUser && (
@@ -86,32 +84,30 @@ export default function MessageBubble({ role, content, agent }) {
             <button
               onClick={handleCopy}
               type="button"
-              className="p-2 rounded-xl hover:bg-muted"
+              className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-zinc-800"
               title="Copy response"
             >
               <Copy size={16} />
             </button>
 
-            {canManageNotes && (
-              <button
-                onClick={handleSave}
-                type="button"
-                className={`p-2 rounded-xl hover:bg-muted ${
-                  saved ? "text-primary" : ""
-                }`}
-                title={saved ? "Saved to notes" : "Save response to notes"}
-                aria-pressed={saved}
-              >
-                <Bookmark
-                  size={16}
-                  fill={saved ? "currentColor" : "none"}
-                />
-              </button>
-            )}
+            <button
+              onClick={handleSave}
+              type="button"
+              className={`p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-zinc-800 ${
+                saved ? "text-indigo-600" : ""
+              }`}
+              title={saved ? "Saved to notes" : "Save response to notes"}
+              aria-pressed={saved}
+            >
+              <Bookmark
+                size={16}
+                fill={saved ? "currentColor" : "none"}
+              />
+            </button>
 
             <button
               type="button"
-              className="p-2 rounded-xl hover:bg-muted"
+              className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-zinc-800"
               title="Share response"
             >
               <Share2 size={16} />
@@ -126,8 +122,7 @@ export default function MessageBubble({ role, content, agent }) {
           h-10
           w-10
           rounded-2xl
-          bg-muted
-          text-muted-foreground
+          bg-slate-200
           flex
           items-center
           justify-center

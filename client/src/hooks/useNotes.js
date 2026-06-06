@@ -1,30 +1,19 @@
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { useUIStore } from "../store/useUIStore";
-import { encodeId } from "../lib/idCrypt";
 
-/**
- * Returns a workspace-scoped, obfuscated localStorage key.
- * The workspace UUID is encoded so raw IDs never appear in storage.
- * Falls back to a shared "default" bucket when no workspace is active.
- */
-function getStorageKey(workspaceId) {
-  if (!workspaceId) return "ragmate_notes_default";
-  return `ragmate_notes_${encodeId(workspaceId)}`;
-}
-
+const STORAGE_KEY = "ragmate_notes";
 const NOTES_UPDATED_EVENT = "ragmate-notes-updated";
 
-function readNotes(key) {
+function readNotes() {
   try {
-    return JSON.parse(localStorage.getItem(key) || "[]");
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
   } catch {
     return [];
   }
 }
 
-function writeNotes(key, notes) {
-  localStorage.setItem(key, JSON.stringify(notes));
+function writeNotes(notes) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
   window.dispatchEvent(new Event(NOTES_UPDATED_EVENT));
 }
 
@@ -49,19 +38,11 @@ function createTitle(content) {
 }
 
 export function useNotes() {
-  const activeWorkspaceId = useUIStore((state) => state.activeWorkspaceId);
-  const storageKey = getStorageKey(activeWorkspaceId);
-
-  const [notes, setNotes] = useState(() => readNotes(storageKey));
-
-  // Reload notes whenever the active workspace changes
-  useEffect(() => {
-    setNotes(readNotes(storageKey));
-  }, [storageKey]);
+  const [notes, setNotes] = useState(readNotes);
 
   useEffect(() => {
     const syncNotes = () => {
-      setNotes(readNotes(storageKey));
+      setNotes(readNotes());
     };
 
     window.addEventListener("storage", syncNotes);
@@ -71,7 +52,7 @@ export function useNotes() {
       window.removeEventListener("storage", syncNotes);
       window.removeEventListener(NOTES_UPDATED_EVENT, syncNotes);
     };
-  }, [storageKey]);
+  }, []);
 
   const addNote = (content, agent) => {
     const text = content?.trim();
@@ -81,12 +62,14 @@ export function useNotes() {
       return null;
     }
 
-    const existing = readNotes(storageKey).find(
+    const existingNote = readNotes().find(
       (note) =>
         note.content === text && (note.agentId || null) === (agent?.id || null),
     );
 
-    if (existing) return existing;
+    if (existingNote) {
+      return existingNote;
+    }
 
     const note = {
       id: crypto.randomUUID(),
@@ -98,32 +81,38 @@ export function useNotes() {
       createdAt: new Date().toISOString(),
     };
 
-    const updatedNotes = [note, ...readNotes(storageKey)];
-    writeNotes(storageKey, updatedNotes);
+    const updatedNotes = [note, ...readNotes()];
+    writeNotes(updatedNotes);
     setNotes(updatedNotes);
 
     return note;
   };
 
   const deleteNote = (noteId) => {
-    const updatedNotes = readNotes(storageKey).filter(
-      (note) => note.id !== noteId,
-    );
-    writeNotes(storageKey, updatedNotes);
+    const updatedNotes = readNotes().filter((note) => note.id !== noteId);
+    writeNotes(updatedNotes);
     setNotes(updatedNotes);
   };
 
   const togglePin = (noteId) => {
-    const updatedNotes = readNotes(storageKey).map((note) =>
-      note.id === noteId ? { ...note, pinned: !note.pinned } : note,
+    const updatedNotes = readNotes().map((note) =>
+      note.id === noteId
+        ? {
+            ...note,
+            pinned: !note.pinned,
+          }
+        : note,
     );
-    writeNotes(storageKey, updatedNotes);
+
+    writeNotes(updatedNotes);
     setNotes(updatedNotes);
   };
 
   const isSaved = (content, agentId = null) => {
     const text = content?.trim();
+
     if (!text) return false;
+
     return notes.some(
       (note) => note.content === text && (note.agentId || null) === agentId,
     );

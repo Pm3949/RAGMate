@@ -1,13 +1,12 @@
 import { Plus, UploadCloud, MessageSquare, FileText, Bot } from "lucide-react";
+
 import { useNavigate } from "react-router-dom";
-import { useWorkspacePermissions } from "../../hooks/useSettings";
 
 export default function QuickActions({ onCreateAgent }) {
   const navigate = useNavigate();
-  const { canManageAgents } = useWorkspacePermissions();
 
   const actions = [
-    ...(canManageAgents ? [{
+    {
       icon: Plus,
       label: "Create Agent",
       action: () => {
@@ -17,7 +16,7 @@ export default function QuickActions({ onCreateAgent }) {
           navigate("/agents");
         }
       },
-    }] : []),
+    },
     {
       icon: Bot,
       label: "View Agents",
@@ -43,15 +42,21 @@ export default function QuickActions({ onCreateAgent }) {
   return (
     <div
       className="
-   glass-card
+   bg-white
+   dark:bg-zinc-900
+   rounded-2xl
+   border
+   border-slate-200
+   dark:border-zinc-800
    p-6
+   shadow-sm
  "
     >
       {" "}
       <div className="flex items-center justify-between mb-6">
         {" "}
-        <h3 className="font-semibold text-lg text-foreground">Quick Actions </h3>
-        <span className="text-xs text-muted-foreground">Productivity</span>
+        <h3 className="font-semibold text-lg">Quick Actions </h3>
+        <span className="text-xs text-slate-500 dark:text-zinc-400">Productivity</span>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {actions.map((action) => (
@@ -69,11 +74,14 @@ export default function QuickActions({ onCreateAgent }) {
         h-32
         rounded-3xl
         border
-        border-border
-        hover:border-primary/40
-        hover:bg-primary/5
-        bg-background/50
-        text-foreground
+        border-slate-200
+        dark:border-zinc-800
+        hover:border-indigo-300
+        hover:bg-indigo-50
+        dark:hover:bg-zinc-800
+        dark:bg-zinc-950/40
+        text-slate-800
+        dark:text-zinc-100
         transition-all
         duration-200
         hover:-translate-y-1
@@ -85,8 +93,10 @@ export default function QuickActions({ onCreateAgent }) {
           h-12
           w-12
           rounded-2xl
-          bg-primary/10
-          text-primary
+          bg-indigo-100
+          dark:bg-indigo-500/15
+          text-indigo-600
+          dark:text-indigo-300
           flex
           items-center
           justify-center

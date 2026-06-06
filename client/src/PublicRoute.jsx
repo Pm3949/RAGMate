@@ -21,7 +21,7 @@ export default function PublicRoute({
   if (user) {
     return (
       <Navigate
-        to="/dashboard"
+        to="/"
         replace
       />
     );
