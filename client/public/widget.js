@@ -28,6 +28,7 @@
   async function fetchConfig() {
     try {
       const response = await fetch(`${supabaseUrl}/rest/v1/chatbots?id=eq.${chatbotId}&select=*`, {
+        cache: 'no-store',
         headers: {
           'apikey': supabaseKey,
           'Authorization': `Bearer ${supabaseKey}`

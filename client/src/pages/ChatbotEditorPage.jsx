@@ -65,7 +65,10 @@ export default function ChatbotEditorPage() {
   };
 
   // Dynamically use the current frontend's domain for the widget.js script URL
-  const embedCode = `<script src="${window.location.origin}/widget.js" data-chatbot-id="${chatbotId}"></script>`;
+  const embedCode = `<!-- RAGMate Chatbot Widget -->\n
+                      <script defer src="${window.location.origin}/widget.js"
+                          data-chatbot-id="${chatbotId}">
+                      </script>`;
 
   const copyEmbedCode = () => {
     navigator.clipboard.writeText(embedCode);
