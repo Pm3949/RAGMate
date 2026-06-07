@@ -31,8 +31,8 @@ app = FastAPI(title="Custom RAGMate Backend")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://rag-mate-ashen.vercel.app", "https://rag-mate-ashen.vercel.app/", "http://localhost:5173", "http://localhost:5174"],
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -810,7 +810,7 @@ async def widget_chat(req: WidgetChatRequest):
 
         # 2. Get the agent config
         cursor.execute(
-            "SELECT name, system_prompt, provider, model, api_key, embedding_model FROM agents WHERE id = %s",
+            "SELECT name, system_prompt, llm_provider, llm_model, api_key, embedding_model FROM agents WHERE id = %s",
             (agent_id,)
         )
         agent_data = cursor.fetchone()

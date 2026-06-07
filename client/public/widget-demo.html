@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RAGMate Chat Widget Demo</title>
+  
+  <!-- Modern Typography (Inter) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+      --card-bg: rgba(30, 41, 59, 0.7);
+      --border-color: rgba(255, 255, 255, 0.1);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    /* Main Container Card */
+    .container {
+      width: 100%;
+      max-width: 600px;
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      margin-bottom: 80px; /* Leave space for widget bubble */
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      background: linear-gradient(to right, #818cf8, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    p.subtitle {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      margin-bottom: 30px;
+    }
+
+    /* Configuration Form */
+    .config-group {
+      text-align: left;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    input {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 14px 18px;
+      color: #fff;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+    }
+
+    .btn-apply {
+      width: 100%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .btn-apply:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    .status-toast {
+      margin-top: 15px;
+      font-size: 0.9rem;
+      color: #34d399;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .status-toast.show {
+      opacity: 1;
+    }
+
+    /* FLOATING CHAT WIDGET */
+    #ragmate-widget-bubble {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      border-radius: 30px;
+      background: var(--primary);
+      box-shadow: 0 10px 25px rgba(79, 70, 229, 0.4);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    #ragmate-widget-bubble:hover {
+      transform: scale(1.1);
+      box-shadow: 0 12px 30px rgba(79, 70, 229, 0.6);
+    }
+
+    #ragmate-widget-bubble svg {
+      width: 28px;
+      height: 28px;
+      fill: none;
+      stroke: white;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: transform 0.3s ease;
+    }
+
+    /* Widget Window */
+    #ragmate-widget-container {
+      position: fixed;
+      bottom: 105px;
+      right: 30px;
+      width: 400px;
+      height: 600px;
+      max-height: calc(100vh - 140px);
+      max-width: calc(100vw - 60px);
+      background: #1e293b;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 9998;
+      animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    #ragmate-widget-container.open {
+      display: flex;
+    }
+
+    /* Widget Header */
+    .widget-header {
+      background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%);
+      color: white;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .widget-title-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .widget-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    .widget-title-text h3 {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .widget-title-text p {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .widget-close-btn {
+      background: transparent;
+      border: none;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 1.5rem;
+      cursor: pointer;
+      line-height: 1;
+      padding: 4px;
+      transition: color 0.2s;
+    }
+
+    .widget-close-btn:hover {
+      color: white;
+    }
+
+    /* Widget Messages Area */
+    .widget-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      background: #0f172a;
+    }
+
+    .message {
+      max-width: 85%;
+      padding: 12px 16px;
+      border-radius: 16px;
+      font-size: 0.925rem;
+      line-height: 1.5;
+      word-wrap: break-word;
+    }
+
+    .message.user {
+      align-self: flex-end;
+      background: var(--primary);
+      color: white;
+      border-bottom-right-radius: 4px;
+    }
+
+    .message.bot {
+      align-self: flex-start;
+      background: #1e293b;
+      color: var(--text-main);
+      border-bottom-left-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Typing Indicator (during streaming) */
+    .message.typing-indicator {
+      display: flex;
+      gap: 4px;
+      padding: 12px 16px;
+      align-items: center;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      background: var(--text-muted);
+      border-radius: 50%;
+      animation: bounce 1.4s infinite ease-in-out both;
+    }
+
+    .dot:nth-child(1) { animation-delay: -0.32s; }
+    .dot:nth-child(2) { animation-delay: -0.16s; }
+
+    /* Widget Input Area */
+    .widget-input-area {
+      padding: 15px 20px;
+      background: #1e293b;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      gap: 10px;
+    }
+
+    .widget-input {
+      flex: 1;
+      background: #0f172a;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 12px 16px;
+      color: white;
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    .widget-input:focus {
+      border-color: var(--primary);
+    }
+
+    .widget-send-btn {
+      background: var(--primary);
+      border: none;
+      border-radius: 10px;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .widget-send-btn:hover {
+      background: var(--primary-hover);
+    }
+
+    .widget-send-btn svg {
+      width: 20px;
+      height: 20px;
+      fill: none;
+      stroke: white;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(30px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes bounce {
+      0%, 80%, 100% { transform: scale(0); }
+      40% { transform: scale(1.0); }
+    }
+
+    /* Simple markdown-like styling inside widget chat */
+    .message.bot p {
+      margin-bottom: 8px;
+    }
+    .message.bot p:last-child {
+      margin-bottom: 0;
+    }
+    .message.bot strong {
+      color: #c084fc;
+    }
+    .message.bot ul, .message.bot ol {
+      margin-left: 20px;
+      margin-bottom: 8px;
+    }
+    .message.bot code {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 2px 4px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.85em;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Demo Settings Container -->
+  <div class="container">
+    <h1>RAGMate Widget Tester</h1>
+    <p class="subtitle">Enter your Chatbot credentials below to test the widget client locally.</p>
+    
+    <div class="config-group">
+      <label for="backendUrl">1. Backend API Endpoint</label>
+      <input type="text" id="backendUrl" value="http://localhost:8000" placeholder="e.g. http://localhost:8000">
+    </div>
+
+    <div class="config-group">
+      <label for="chatbotId">2. Chatbot ID (UUID)</label>
+      <input type="text" id="chatbotId" value="ff8051f5-d786-41bb-b229-eeb6da65b142" placeholder="Paste your Chatbot ID from Dashboard">
+    </div>
+
+    <button class="btn-apply" onclick="applySettings()">Save & Initialize Widget</button>
+    <div class="status-toast" id="statusToast">Widget updated and ready!</div>
+  </div>
+
+  <!-- FLOATING WIDGET ELEMENT -->
+  <div id="ragmate-widget-bubble" onclick="toggleWidget()">
+    <svg viewBox="0 0 24 24">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+    </svg>
+  </div>
+
+  <!-- FLOATING WIDGET CONTAINER -->
+  <div id="ragmate-widget-container">
+    <div class="widget-header">
+      <div class="widget-title-area">
+        <div class="widget-avatar">🤖</div>
+        <div class="widget-title-text">
+          <h3 id="widget-bot-name">RAGMate Assistant</h3>
+          <p>Online | Powered by RAGMate</p>
+        </div>
+      </div>
+      <button class="widget-close-btn" onclick="toggleWidget()">&times;</button>
+    </div>
+    
+    <div class="widget-messages" id="widgetMessages">
+      <div class="message bot">
+        Hello! I'm your customer support assistant. How can I help you today?
+      </div>
+    </div>
+    
+    <div class="widget-input-area">
+      <input type="text" class="widget-input" id="widgetInput" placeholder="Type your message..." onkeypress="handleKeyPress(event)">
+      <button class="widget-send-btn" onclick="sendMessage()">
+        <svg viewBox="0 0 24 24">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Configuration State
+    let backendUrl = "http://localhost:8000";
+    let chatbotId = "ff8051f5-d786-41bb-b229-eeb6da65b142";
+    let chatHistory = []; // Tracks memory
+
+    function applySettings() {
+      backendUrl = document.getElementById("backendUrl").value.trim().replace(/\/$/, "");
+      chatbotId = document.getElementById("chatbotId").value.trim();
+      chatHistory = []; // Clear history on widget re-init
+      
+      // Reset Messages UI
+      const msgArea = document.getElementById("widgetMessages");
+      msgArea.innerHTML = `
+        <div class="message bot">
+          Hello! I'm your customer support assistant. How can I help you today?
+        </div>
+      `;
+
+      // Show temporary toast
+      const toast = document.getElementById("statusToast");
+      toast.classList.add("show");
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 3000);
+    }
+
+    function toggleWidget() {
+      const container = document.getElementById("ragmate-widget-container");
+      container.classList.toggle("open");
+      if (container.classList.contains("open")) {
+        document.getElementById("widgetInput").focus();
+      }
+    }
+
+    function handleKeyPress(e) {
+      if (e.key === "Enter") {
+        sendMessage();
+      }
+    }
+
+    // Basic markdown helper for widget replies
+    function formatMessage(text) {
+      // Escape HTML tags to prevent XSS
+      let safeText = text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+
+      // bold **text**
+      safeText = safeText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      // inline code `code`
+      safeText = safeText.replace(/`(.*?)`/g, '<code>$1</code>');
+      
+      // lists (- item or * item)
+      const lines = safeText.split("\n");
+      let inList = false;
+      let formattedLines = lines.map(line => {
+        if (line.trim().startsWith("- ") || line.trim().startsWith("* ")) {
+          let liContent = line.trim().substring(2);
+          let prefix = !inList ? "<ul>" : "";
+          inList = true;
+          return prefix + `<li>${liContent}</li>`;
+        } else {
+          let suffix = inList ? "</ul>" : "";
+          inList = false;
+          return suffix + `<p>${line}</p>`;
+        }
+      });
+      if (inList) {
+        formattedLines.push("</ul>");
+      }
+      return formattedLines.join("");
+    }
+
+    async function sendMessage() {
+      const inputEl = document.getElementById("widgetInput");
+      const userText = inputEl.value.trim();
+      if (!userText) return;
+
+      // Clear input
+      inputEl.value = "";
+
+      const msgArea = document.getElementById("widgetMessages");
+
+      // 1. Add user message
+      const userMsgDiv = document.createElement("div");
+      userMsgDiv.className = "message user";
+      userMsgDiv.textContent = userText;
+      msgArea.appendChild(userMsgDiv);
+      msgArea.scrollTop = msgArea.scrollHeight;
+
+      // 2. Add Typing/Streaming Indicator
+      const botMsgDiv = document.createElement("div");
+      botMsgDiv.className = "message bot";
+      
+      const typingDiv = document.createElement("div");
+      typingDiv.className = "typing-indicator";
+      typingDiv.innerHTML = '<span class="dot"></span><span class="dot"></span><span class="dot"></span>';
+      botMsgDiv.appendChild(typingDiv);
+      msgArea.appendChild(botMsgDiv);
+      msgArea.scrollTop = msgArea.scrollHeight;
+
+      // Prepare payload
+      const payload = {
+        chatbot_id: chatbotId,
+        message: userText,
+        history: chatHistory
+      };
+
+      try {
+        const response = await fetch(`${backendUrl}/api/widget/chat`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          const errData = await response.json().catch(() => ({ detail: "Network response error" }));
+          throw new Error(errData.detail || `Server error (${response.status})`);
+        }
+
+        // Clean up typing indicator before writing stream
+        botMsgDiv.innerHTML = "";
+
+        // Read stream chunks
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let completeResponse = "";
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          const chunkText = decoder.decode(value, { stream: true });
+          completeResponse += chunkText;
+          
+          // Format as we stream
+          botMsgDiv.innerHTML = formatMessage(completeResponse);
+          msgArea.scrollTop = msgArea.scrollHeight;
+        }
+
+        // Save to active history
+        chatHistory.push({ role: "user", content: userText });
+        chatHistory.push({ role: "assistant", content: completeResponse });
+
+      } catch (err) {
+        botMsgDiv.innerHTML = `<span style="color: #ef4444;">⚠️ Error: ${err.message}</span>`;
+        msgArea.scrollTop = msgArea.scrollHeight;
+      }
+    }
+  </script>
+</body>
+</html>

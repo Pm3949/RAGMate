@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mock Business Website - Widget Test Page</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background: #f8fafc;
+      color: #0f172a;
+      line-height: 1.6;
+    }
+
+    header {
+      background: white;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #4f46e5;
+    }
+
+    nav a {
+      margin-left: 20px;
+      text-decoration: none;
+      color: #475569;
+      font-weight: 500;
+    }
+
+    nav a:hover {
+      color: #4f46e5;
+    }
+
+    .hero {
+      max-width: 800px;
+      margin: 80px auto;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      color: #1e293b;
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      color: #64748b;
+      margin-bottom: 30px;
+    }
+
+    .btn {
+      background: #4f46e5;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .btn:hover {
+      background: #4338ca;
+    }
+
+    .features {
+      display: flex;
+      justify-content: space-around;
+      max-width: 1000px;
+      margin: 40px auto;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid #e2e8f0;
+      padding: 30px;
+      border-radius: 12px;
+      flex: 1;
+    }
+
+    .card h3 {
+      margin-bottom: 10px;
+      font-size: 1.25rem;
+    }
+
+    .card p {
+      color: #64748b;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="logo">Acme Corp</div>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">Features</a>
+      <a href="#">Pricing</a>
+      <a href="#">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>The Future of Innovation</h1>
+      <p>We provide state of the art software solutions to help grow your business. Integrate tools effortlessly,
+        analyze insights, and increase engagement.</p>
+      <a href="#" class="btn">Get Started Free</a>
+    </section>
+
+    <section class="features">
+      <div class="card">
+        <h3>⚡ High Speed</h3>
+        <p>Built with optimization in mind to make your operations execute instantly.</p>
+      </div>
+      <div class="card">
+        <h3>🔒 Secure</h3>
+        <p>Enterprise grade security protocol keeps your data isolated and private.</p>
+      </div>
+      <div class="card">
+        <h3>📈 Analytics</h3>
+        <p>Gain insights with advanced analytical tracking pipelines automatically.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============================================= -->
+  <!-- PASTE YOUR CHATBOT INTEGRATION SCRIPT BELOW: -->
+  <!-- ============================================= -->
+  <script src="./widget.js"
+    data-chatbot-id="99bef2d6-3ba9-448c-b570-2a33db75924e"
+    data-api-url="http://localhost:8000"></script>
+
+
+  <!-- ============================================= -->
+
+</body>
+
+</html>
