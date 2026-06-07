@@ -806,6 +806,7 @@ async def widget_chat(req: WidgetChatRequest):
         # Increment widget message count and log it
         cursor.execute("UPDATE chatbots SET message_count = message_count + 1 WHERE id = %s", (req.chatbot_id,))
         cursor.execute("INSERT INTO widget_message_logs (chatbot_id) VALUES (%s)", (req.chatbot_id,))
+        conn.commit()
 
         # 2. Get the agent config
         cursor.execute(
@@ -839,9 +840,6 @@ async def widget_chat(req: WidgetChatRequest):
             WHERE d.agent_id = %s
         """, (agent_id,))
         rows = cursor.fetchall()
-        
-        # Commit all write transactions now that database reads are complete
-        conn.commit()
 
         context = "No specific documents found."
         if rows:
