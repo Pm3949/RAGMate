@@ -9,7 +9,7 @@
   }
 
   // Configurations with local development fallbacks
-  const apiUrl = scriptTag.getAttribute('data-api-url') || 'http://localhost:8000';
+  const apiUrl = scriptTag.getAttribute('data-api-url') || 'https://ragmate.onrender.com';
   const supabaseUrl = scriptTag.getAttribute('data-supabase-url') || 'https://phqaaugotzmxjgjzhvhp.supabase.co';
   const supabaseKey = scriptTag.getAttribute('data-supabase-key') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBocWFhdWdvdHpteGpnanpodmhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4ODUxNjcsImV4cCI6MjA5NTQ2MTE2N30.dUDdQVQgRrDYQWR8IiVw2DNNDlfg8XxD14rLjBAuDE0';
 
