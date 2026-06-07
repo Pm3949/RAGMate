@@ -903,11 +903,17 @@ async def widget_chat(req: WidgetChatRequest):
         if conn:
             conn.rollback()
         raise
-    except Exception as exc:
-        logger.exception("Widget Chat endpoint failed")
-        if conn:
-            conn.rollback()
-        raise HTTPException(status_code=500, detail=str(exc))
+    except Exception as e:
+        logger.error(f"Widget Chat endpoint failed", exc_info=True)
+        # CRITICAL FIX: Only roll back if the connection is actually still open
+        if conn and not conn.closed:
+            try:
+                conn.rollback()
+            except psycopg2.InterfaceError:
+                pass # Connection was already closed by the host anyway
+        
+        return StreamingResponse(
+            iter([f"Error: {str(e)}"]),)
     finally:
         if cursor:
             cursor.close()
