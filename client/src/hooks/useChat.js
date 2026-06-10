@@ -1,69 +1,80 @@
+import { useState, useMemo, useEffect } from "react";
 import { toast } from "sonner";
 import { streamChat } from "../services/chatService";
-import { useChatStore } from "../store/useChatStore";
+import { useChatSessions, useChatMessages, useChatMutations } from "./useChatHistory";
 
 export function useChat() {
-  const {
-    activeSessionId,
-    sessions,
-    addMessage,
-    updateLastAssistantMessage,
-    startSession,
-    selectSession,
-    renameSession,
-    togglePinSession,
-    deleteSession,
-    ensureSession,
-    isTyping,
-    setTyping,
-  } = useChatStore();
-  const activeSession = sessions.find((session) => session.id === activeSessionId);
-  const messages = activeSession?.messages || [];
+  const { data: sessions = [] } = useChatSessions();
+  const [activeSessionId, setActiveSessionId] = useState(null);
+  const [isTyping, setIsTyping] = useState(false);
+  const [streamingContent, setStreamingContent] = useState("");
+
+  // Initialize activeSessionId from first session if null
+  useEffect(() => {
+    if (!activeSessionId && sessions.length > 0) {
+      setActiveSessionId(sessions[0].id);
+    }
+  }, [sessions, activeSessionId]);
+
+  const activeSession = useMemo(() => 
+    sessions.find(s => s.id === activeSessionId), 
+  [sessions, activeSessionId]);
+
+  const { data: dbMessages = [] } = useChatMessages(activeSessionId);
+  const { createSession, renameSession: renameDb, togglePinSession: pinDb, deleteSession: delDb, addMessage } = useChatMutations();
+
+  const messages = useMemo(() => {
+    if (!isTyping) return dbMessages;
+    return [...dbMessages, {
+      id: "optimistic-assistant",
+      role: "assistant",
+      content: streamingContent || "Thinking..."
+    }];
+  }, [dbMessages, isTyping, streamingContent]);
+
+  const startNewChat = async ({ agentId, agentName } = {}) => {
+    try {
+      const newSession = await createSession.mutateAsync({ agentId, title: "New chat" });
+      setActiveSessionId(newSession.id);
+    } catch (e) {
+      toast.error("Failed to start new chat");
+    }
+  };
 
   const sendMessage = async ({ agentId, agentName, content }) => {
     const message = content.trim();
-
     if (!agentId) {
       toast.error("Select an agent before starting chat.");
       return;
     }
-
     if (!message) return;
 
-    const session = ensureSession({
-      agentId,
-      agentName,
-    });
+    let currentSessionId = activeSessionId;
+    
+    // Check if the current session belongs to the selected agent
+    const belongsToAgent = sessions.find(s => s.id === currentSessionId)?.agentId === agentId;
+    
+    if (!currentSessionId || !belongsToAgent) {
+      const newSession = await createSession.mutateAsync({ agentId, title: message.slice(0, 40) });
+      currentSessionId = newSession.id;
+      setActiveSessionId(currentSessionId);
+    } else {
+       if (dbMessages.length === 0 && activeSession?.title === "New chat") {
+           renameDb.mutateAsync({ id: currentSessionId, title: message.slice(0, 40) });
+       }
+    }
 
-    const userMessage = {
-      id: crypto.randomUUID(),
-      role: "user",
-      content: message,
-    };
+    // Save User Message to DB
+    await addMessage.mutateAsync({ sessionId: currentSessionId, role: "user", content: message });
 
-    const assistantMessage = {
-      id: crypto.randomUUID(),
-      role: "assistant",
-      content: "",
-    };
+    // Stream
+    setIsTyping(true);
+    setStreamingContent("");
 
-    const history = session.messages.map(({ role, content: itemContent }) => ({
-      role,
-      content: itemContent,
-    }));
-
-    addMessage(userMessage, {
-      agentId,
-      agentName,
-    });
-    addMessage(assistantMessage, {
-      agentId,
-      agentName,
-    });
-
-    setTyping(true);
-
+    let finalContent = "";
     try {
+      const history = dbMessages.map(({ role, content }) => ({ role, content }));
+      
       await streamChat(
         {
           agent_id: agentId,
@@ -71,21 +82,39 @@ export function useChat() {
           history,
         },
         (streamedText) => {
-          updateLastAssistantMessage(streamedText);
+          setStreamingContent(streamedText);
+          finalContent = streamedText;
         },
       );
+      
+      // Save Assistant Message to DB
+      if (finalContent) {
+        await addMessage.mutateAsync({ sessionId: currentSessionId, role: "assistant", content: finalContent });
+      }
     } catch (error) {
       toast.error(error.message || "Unable to get a response.");
+      // Optional: Save an error message so the user knows it failed
     } finally {
-      setTyping(false);
+      setIsTyping(false);
+      setStreamingContent("");
     }
   };
 
-  const startNewChat = ({ agentId, agentName } = {}) =>
-    startSession({
-      agentId,
-      agentName,
-    });
+  const selectSession = (id) => setActiveSessionId(id);
+  
+  const renameSession = (id, title) => {
+    if (title.trim()) renameDb.mutateAsync({ id, title: title.trim() });
+  };
+  
+  const togglePinSession = (id) => {
+    const session = sessions.find(s => s.id === id);
+    if (session) pinDb.mutateAsync({ id, pinned: !session.pinned });
+  };
+  
+  const deleteSession = async (id) => {
+    await delDb.mutateAsync(id);
+    if (activeSessionId === id) setActiveSessionId(null);
+  };
 
   return {
     activeSessionId,
