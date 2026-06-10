@@ -1415,8 +1415,9 @@ async def invite_workspace_member(req: InviteRequest):
         )
         conn.commit()
 
+        APP_URL = "https://rag-mate-ashen.vercel.app"
         # Send Real Email (Redirect user to local frontend dashboard or login page)
-        signup_url = f"http://localhost:5173/login?email={req.email}&invite=true"
+        signup_url = f"{APP_URL}/login?email={req.email}&invite=true"
         send_invite_email(
             to_email=req.email,
             workspace_name=req.workspace_name,

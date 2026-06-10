@@ -99,7 +99,15 @@ export default function ChatPage() {
   };
 
   const handleSaveSession = (session) => {
-    const chatContent = session.messages
+    let msgsToSave = [];
+    if (session.id === activeSessionId) {
+      msgsToSave = messages;
+    } else {
+      toast.error("Please open the chat to save it to notes.");
+      return;
+    }
+
+    const chatContent = msgsToSave
       .filter((message) => message.content?.trim())
       .map(
         (message) =>

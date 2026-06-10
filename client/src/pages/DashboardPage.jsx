@@ -22,7 +22,7 @@ export default function DashboardPage() {
     isLoading: isLoadingAgents,
   } = useAgents(activeWorkspaceId);
   const totalMessages = sessions.reduce(
-    (count, session) => count + session.messages.length,
+    (count, session) => count + (session.messages?.length || 0),
     0,
   );
 

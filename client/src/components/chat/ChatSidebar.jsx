@@ -229,7 +229,7 @@ export default function ChatSidebar({
                   <button
                     type="button"
                     onClick={() => handleSave(session)}
-                    disabled={session.messages.length === 0}
+                    disabled={!(session.messages || []).length && false} // Disable logic requires fetching, keeping enabled for now
                     className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-sm text-foreground hover:bg-muted disabled:opacity-50"
                   >
                     <Bookmark size={15} />

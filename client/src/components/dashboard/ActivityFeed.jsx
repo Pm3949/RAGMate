@@ -27,7 +27,7 @@ export default function ActivityFeed({
       id: `session-${session.id}`,
       icon: MessageSquare,
       title: session.title,
-      meta: `${session.messages.length} messages · ${formatDate(session.updatedAt)}`,
+      meta: `${session.messages?.length || 0} messages · ${formatDate(session.updatedAt)}`,
     })),
     ...notes.slice(0, 3).map((note) => ({
       id: `note-${note.id}`,
