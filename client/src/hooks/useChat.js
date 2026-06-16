@@ -73,6 +73,7 @@ export function useChat() {
 
     let finalContent = "";
     const startTime = Date.now();
+    let ttft = null;
     try {
       const history = dbMessages.map(({ role, content }) => ({ role, content }));
       
@@ -84,6 +85,9 @@ export function useChat() {
           language,
         },
         (streamedText) => {
+          if (!ttft) {
+            ttft = Date.now() - startTime;
+          }
           setStreamingContent(streamedText);
           finalContent = streamedText;
         },
@@ -91,7 +95,7 @@ export function useChat() {
       
       // Save Assistant Message to DB
       if (finalContent) {
-        const latency = Date.now() - startTime;
+        const latency = ttft || (Date.now() - startTime);
         await addMessage.mutateAsync({ sessionId: currentSessionId, role: "assistant", content: finalContent, latency });
       }
     } catch (error) {

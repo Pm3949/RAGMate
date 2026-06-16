@@ -391,12 +391,12 @@ export default function CreateAgentWizard({ onClose }) {
                     rounded-3xl
                     border
                     transition-all
+                    bg-background
                     ${
                       formData.provider === provider.id
                         ? "border-primary bg-primary/5"
                         : "border-border hover:border-primary/50"
                     }
-                    bg-background
                   `}
                   >
                     <h4 className="font-semibold">{provider.name}</h4>
@@ -415,12 +415,12 @@ export default function CreateAgentWizard({ onClose }) {
                     rounded-2xl
                     border
                     text-left
+                    bg-background
                     ${
                       formData.model === model.id
                         ? "border-primary bg-primary/5"
                         : "border-border hover:border-primary/50"
                     }
-                    bg-background
                   `}
                   >
                     {model.name}
@@ -448,6 +448,7 @@ export default function CreateAgentWizard({ onClose }) {
                     rounded-3xl
                     border
                     text-left
+                    bg-background
                     ${
                       item.disabled
                         ? "opacity-50 cursor-not-allowed border-border"
@@ -455,7 +456,6 @@ export default function CreateAgentWizard({ onClose }) {
                         ? "border-primary bg-primary/5"
                         : "border-border hover:border-primary/50"
                     }
-                    bg-background
                   `}
                   >
                     <h4 className="font-semibold">{item.name}</h4>

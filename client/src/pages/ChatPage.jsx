@@ -1,5 +1,6 @@
 import { useMemo, useState, useEffect } from "react";
 import { toast } from "sonner";
+import { PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen } from "lucide-react";
 import ChatSidebar from "../components/chat/ChatSidebar";
 import ChatComposer from "../components/chat/ChatComposer";
 import MessageBubble from "../components/chat/MessageBubble";
@@ -21,6 +22,11 @@ export default function ChatPage() {
   const { data: agents = [], isLoading: isLoadingAgents } = useAgents(activeWorkspaceId);
   const [activeAgentId, setActiveAgentId] = useState("");
   const [chatLanguage, setChatLanguage] = useState("en");
+  
+  // UI Toggles
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isContextOpen, setIsContextOpen] = useState(true);
+
   const {
     activeSessionId,
     activeSession,
@@ -147,23 +153,45 @@ export default function ChatPage() {
 
   return (
     <div className="flex h-[calc(100vh-8rem)] overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
-      <ChatSidebar
-        agents={agents}
-        activeAgentId={selectedAgentId}
-        activeSessionId={isActiveSessionForSelectedAgent ? activeSessionId : null}
-        sessions={selectedAgentSessions}
-        onAgentSelect={handleAgentSelect}
-        onNewChat={handleNewChat}
-        onSessionSelect={handleSessionSelect}
-        onRenameSession={renameSession}
-        onTogglePinSession={togglePinSession}
-        onDeleteSession={deleteSession}
-        onSaveSession={handleSaveSession}
-      />
+      {isSidebarOpen && (
+        <ChatSidebar
+          agents={agents}
+          activeAgentId={selectedAgentId}
+          activeSessionId={isActiveSessionForSelectedAgent ? activeSessionId : null}
+          sessions={selectedAgentSessions}
+          onAgentSelect={handleAgentSelect}
+          onNewChat={handleNewChat}
+          onSessionSelect={handleSessionSelect}
+          onRenameSession={renameSession}
+          onTogglePinSession={togglePinSession}
+          onDeleteSession={deleteSession}
+          onSaveSession={handleSaveSession}
+        />
+      )}
 
-      <div className="flex-1 flex flex-col">
-        <div className="flex-1 overflow-y-auto">
-          <div className="max-w-4xl mx-auto px-8 py-10 space-y-8">
+      <div className="flex-1 flex flex-col relative min-w-0">
+        <div className="absolute top-4 left-4 z-10">
+           <button 
+             onClick={() => setIsSidebarOpen(!isSidebarOpen)} 
+             className="p-2 bg-card/80 backdrop-blur border border-border shadow-sm rounded-xl hover:bg-muted text-muted-foreground transition-all"
+             title="Toggle Chat History"
+           >
+             {isSidebarOpen ? <PanelLeftClose size={18} /> : <PanelLeftOpen size={18} />}
+           </button>
+        </div>
+
+        <div className="absolute top-4 right-4 z-10">
+           <button 
+             onClick={() => setIsContextOpen(!isContextOpen)} 
+             className="p-2 bg-card/80 backdrop-blur border border-border shadow-sm rounded-xl hover:bg-muted text-muted-foreground transition-all"
+             title="Toggle Context Panel"
+           >
+             {isContextOpen ? <PanelRightClose size={18} /> : <PanelRightOpen size={18} />}
+           </button>
+        </div>
+
+        <div className="flex-1 overflow-y-auto pt-16">
+          <div className="max-w-4xl mx-auto px-8 pb-10 space-y-8">
             {isLoadingAgents && <LoadingSkeleton count={2} className="h-24" />}
 
             {!isLoadingAgents && agents.length === 0 && (
@@ -175,7 +203,7 @@ export default function ChatPage() {
             {!isLoadingAgents &&
               agents.length > 0 &&
               visibleMessages.length === 0 && (
-              <div className="rounded-2xl border border-dashed border-border bg-card p-8 text-center">
+              <div className="rounded-2xl border border-dashed border-border bg-card p-8 text-center mt-8">
                 <h3 className="font-semibold text-foreground">
                   {activeAgent ? activeAgent.name : "Start a chat"}
                 </h3>
@@ -220,7 +248,9 @@ export default function ChatPage() {
         />
       </div>
 
-      <ContextPanel documents={documents} isLoading={isLoadingDocuments} />
+      {isContextOpen && (
+        <ContextPanel documents={documents} isLoading={isLoadingDocuments} />
+      )}
     </div>
   );
 }
