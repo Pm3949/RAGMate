@@ -4,17 +4,16 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 import { toast } from "sonner";
-import { useNotes } from "../../hooks/useNotes";
-import { useWorkspacePermissions } from "../../hooks/useSettings";
+
+
 
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 export default function MessageBubble({ role, content, agent, chatLanguage, latency }) {
   const isUser = role === "user";
-  const { addNote, isSaved } = useNotes();
-  const { canManageNotes } = useWorkspacePermissions();
-  const saved = isSaved(content, agent?.id || null);
+
+
   const [isSpeaking, setIsSpeaking] = useState(false);
   const audioRef = useState(new Audio())[0];
 
@@ -85,14 +84,6 @@ export default function MessageBubble({ role, content, agent, chatLanguage, late
       toast.success("Copied");
     } catch {
       toast.error("Copy failed. Please try again.");
-    }
-  };
-
-  const handleSave = () => {
-    const note = addNote(content, agent);
-
-    if (note) {
-      toast.success(saved ? "Already saved" : "Saved to notes");
     }
   };
 
@@ -177,22 +168,7 @@ export default function MessageBubble({ role, content, agent, chatLanguage, late
                 <Copy size={16} />
               </button>
 
-              {canManageNotes && (
-                <button
-                  onClick={handleSave}
-                  type="button"
-                  className={`p-2 rounded-xl hover:bg-muted ${
-                    saved ? "text-primary" : ""
-                  }`}
-                  title={saved ? "Saved to notes" : "Save response to notes"}
-                  aria-pressed={saved}
-                >
-                  <Bookmark
-                    size={16}
-                    fill={saved ? "currentColor" : "none"}
-                  />
-                </button>
-              )}
+
 
               <button
                 onClick={handleTTS}

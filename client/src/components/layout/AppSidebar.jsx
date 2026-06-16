@@ -65,11 +65,6 @@ const groups = [
         path: "/chat",
       },
       {
-        label: "Notes",
-        icon: BookOpen,
-        path: "/notes",
-      },
-      {
         label: "Analytics",
         icon: BarChart3,
         path: "/analytics",

@@ -5,7 +5,7 @@ import ActivityFeed from "../components/dashboard/ActivityFeed";
 import { useAuth } from "../context/AuthContext";
 import { useAgents } from "../hooks/useAgents";
 import { useChat } from "../hooks/useChat";
-import { useNotes } from "../hooks/useNotes";
+
 import LoadingSkeleton from "../components/shared/LoadingSkeleton";
 import { useUIStore } from "../store/useUIStore";
 
@@ -13,7 +13,7 @@ export default function DashboardPage() {
   const { user } = useAuth();
   const activeWorkspaceId = useUIStore((state) => state.activeWorkspaceId);
   const { sessions = [] } = useChat();
-  const { notes = [] } = useNotes();
+
   const setCreateAgentWizardOpen = useUIStore(
     (state) => state.setCreateAgentWizardOpen,
   );
@@ -41,7 +41,7 @@ export default function DashboardPage() {
         activeAgentsCount={agents.length}
         conversationsCount={sessions.length}
         messagesCount={totalMessages}
-        notesCount={notes.length}
+
         isLoadingAgents={isLoadingAgents}
       />
 
@@ -62,7 +62,7 @@ export default function DashboardPage() {
         <ActivityFeed
           agents={agents}
           sessions={sessions}
-          notes={notes}
+
         />
       </div>
     </>

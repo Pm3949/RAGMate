@@ -46,12 +46,6 @@ const commands = [
     path: "/knowledge",
   },
   {
-    icon: FileText,
-    label: "Notes",
-    shortcut: "N",
-    path: "/notes",
-  },
-  {
     icon: BarChart3,
     label: "Analytics",
     shortcut: "Y",
