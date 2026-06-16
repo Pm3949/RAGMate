@@ -13,7 +13,7 @@ import KnowledgeBasePage from "../pages/KnowledgeBasePage";
 import ChatPage from "../pages/ChatPage";
 import ChatbotsPage from "../pages/ChatbotsPage";
 import ChatbotEditorPage from "../pages/ChatbotEditorPage";
-import NotesPage from "../pages/NotesPage";
+
 import AnalyticsPage from "../pages/AnalyticsPage";
 import SettingsPage from "../pages/SettingsPage";
 import TeamPage from "../pages/TeamPage";
@@ -105,14 +105,7 @@ export const router = createBrowserRouter([
           </PermissionRoute>
         ),
       },
-      {
-        path: "notes",
-        element: (
-          <PermissionRoute permission="canManageNotes" label="Notes">
-            <NotesPage />
-          </PermissionRoute>
-        ),
-      },
+
 
       // ── Admin-only routes ─────────────────────────────────────────
       {

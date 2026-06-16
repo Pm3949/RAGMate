@@ -10,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from groq import Groq
 
 # Import routers
-from routers import documents, analytics, admin, billing, chat, workspaces, agents, chatbots, settings, notes
+from routers import documents, analytics, admin, billing, chat, workspaces, agents, chatbots, settings, feedback
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -42,7 +42,7 @@ app.include_router(workspaces.router)
 app.include_router(agents.router)
 app.include_router(chatbots.router)
 app.include_router(settings.router)
-app.include_router(notes.router)
+app.include_router(feedback.router)
 
 class TTSRequest(BaseModel):
     text: str

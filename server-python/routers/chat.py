@@ -20,6 +20,33 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter(tags=["chat"])
 
+def fetch_temporary_memory_patch(cursor, agent_id: str) -> str:
+    """Fetches open feedback tickets to temporarily patch the AI's knowledge."""
+    try:
+        cursor.execute(
+            """
+            SELECT f.category, f.comment_text, m.content
+            FROM message_feedback f
+            JOIN chat_messages m ON f.message_id = m.id
+            WHERE f.agent_id = %s AND f.status = 'open'
+            """,
+            (agent_id,)
+        )
+        open_tickets = cursor.fetchall()
+        if not open_tickets:
+            return ""
+            
+        patch = "\n\nCRITICAL TEMPORARY CORRECTIONS (USER FEEDBACK):\n"
+        patch += "The following errors were flagged in your previous answers. You MUST NOT repeat these mistakes and MUST incorporate these corrections in your responses:\n"
+        for cat, comment, msg_content in open_tickets:
+            short_msg = msg_content[:50] + "..." if msg_content else "Unknown message"
+            patch += f"- [Flagged {cat} in past answer: '{short_msg}']: {comment}\n"
+        
+        return patch
+    except Exception as e:
+        logger.error(f"Error fetching memory patch: {e}")
+        return ""
+
 @router.post("/chat")
 async def chat_with_agent(req: ChatRequest):
     """Stream an LLM response grounded in the uploaded documents."""
@@ -106,7 +133,9 @@ async def chat_with_agent(req: ChatRequest):
         if not history_text:
             history_text = "No previous conversation."
 
-        prompt = f"""{system_prompt}
+        memory_patch = fetch_temporary_memory_patch(cursor, req.agent_id)
+
+        prompt = f"""{system_prompt}{memory_patch}
         You are a strict, professional AI assistant grounded ONLY in the provided documents.
 
         CRITICAL RULES:
@@ -279,8 +308,10 @@ async def widget_chat(req: WidgetChatRequest, request: Request):
         if not history_text:
             history_text = "No previous conversation."
 
+        memory_patch = fetch_temporary_memory_patch(cursor, agent_id)
+
         # 6. Build Prompt
-        prompt = f"""{system_prompt}
+        prompt = f"""{system_prompt}{memory_patch}
         You are a strict, professional AI assistant grounded ONLY in the provided documents.
 
         CRITICAL RULES:
@@ -455,7 +486,9 @@ async def api_v1_chat(req: APIChatRequest, x_api_key: str = Header(...)):
         if not history_text:
             history_text = "No previous conversation."
 
-        prompt = f"{system_prompt}\n\nCONTEXT DOCUMENTS:\n{context}\n\nPREVIOUS CHAT HISTORY:\n{history_text}\n\nCURRENT USER INPUT: {req.message}"
+        memory_patch = fetch_temporary_memory_patch(cursor, agent_id)
+
+        prompt = f"{system_prompt}{memory_patch}\n\nCONTEXT DOCUMENTS:\n{context}\n\nPREVIOUS CHAT HISTORY:\n{history_text}\n\nCURRENT USER INPUT: {req.message}"
 
         lang_map = {
             "en": "English", "es": "Spanish", "fr": "French",
