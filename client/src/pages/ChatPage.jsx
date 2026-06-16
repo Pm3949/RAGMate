@@ -10,7 +10,7 @@ import { useAuth } from "../context/AuthContext";
 import { useAgents } from "../hooks/useAgents";
 import { useChat } from "../hooks/useChat";
 import { useDocuments } from "../hooks/useDocuments";
-import { useNotes } from "../hooks/useNotes";
+
 import LoadingSkeleton from "../components/shared/LoadingSkeleton";
 import { useUIStore } from "../store/useUIStore";
 
@@ -40,7 +40,7 @@ export default function ChatPage() {
     togglePinSession,
     deleteSession,
   } = useChat();
-  const { addNote } = useNotes();
+
 
   const selectedAgentId =
     activeAgentId || activeSession?.agentId || agents[0]?.id || "";
@@ -112,44 +112,7 @@ export default function ChatPage() {
     });
   };
 
-  const handleSaveSession = (session) => {
-    let msgsToSave = [];
-    if (session.id === activeSessionId) {
-      msgsToSave = messages;
-    } else {
-      toast.error("Please open the chat to save it to notes.");
-      return;
-    }
 
-    const chatContent = msgsToSave
-      .filter((message) => message.content?.trim())
-      .map(
-        (message) =>
-          `**${message.role === "user" ? "You" : "Assistant"}:**\n\n${
-            message.content
-          }`,
-      )
-      .join("\n\n---\n\n");
-
-    if (!chatContent) {
-      toast.error("This chat has no messages to save.");
-      return;
-    }
-
-    const note = addNote(
-      `# Chat: ${session.title}\n\nAgent: ${
-        session.agentName || "General"
-      }\n\n${chatContent}`,
-      {
-        id: session.agentId,
-        name: session.agentName || "General",
-      },
-    );
-
-    if (note) {
-      toast.success("Full chat saved to notes");
-    }
-  };
 
   return (
     <div className="flex h-[calc(100vh-8rem)] overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
@@ -165,7 +128,6 @@ export default function ChatPage() {
           onRenameSession={renameSession}
           onTogglePinSession={togglePinSession}
           onDeleteSession={deleteSession}
-          onSaveSession={handleSaveSession}
         />
       )}
 
