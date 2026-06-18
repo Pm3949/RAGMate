@@ -101,7 +101,7 @@ export const useUIStore = create(
       setActiveWorkspaceId: (id) => set({ activeWorkspaceId: id }),
     }),
     {
-      name: "ragmate-ui",
+      name: "blinkbot-ui",
       storage: encryptedStorage,
       partialize: (state) => ({
         darkMode: state.darkMode,

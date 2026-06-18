@@ -7,7 +7,6 @@ import {
   BookOpen,
   BarChart3,
   Settings,
-  LogOut,
   PanelLeftClose,
   PanelLeftOpen,
   Users,
@@ -21,7 +20,6 @@ import { useUserWorkspaces, useWorkspacePermissions } from "../../hooks/useSetti
 import { NavLink } from "react-router-dom";
 import { toast } from "sonner";
 import Logo from "../shared/Logo";
-import { signOut } from "../../services/authService";
 import { useUIStore } from "../../store/useUIStore";
 import { useFeedback } from "../../hooks/useFeedback";
 import {
@@ -114,16 +112,6 @@ export default function AppSidebar({ onNavigate, forceExpanded = false }) {
       setActiveWorkspaceId(workspaces[0].id);
     }
   }, [workspaces, activeWorkspaceId, setActiveWorkspaceId]);
-
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-      toast.success("Signed out");
-      onNavigate?.();
-    } catch (error) {
-      toast.error(error.message || "Unable to sign out. Please try again.");
-    }
-  };
 
   const filteredGroups = groups.map(group => {
   if (group.label === "System") {
@@ -245,18 +233,6 @@ export default function AppSidebar({ onNavigate, forceExpanded = false }) {
             )}
           </div>
         )}
-
-        <button
-          type="button"
-          onClick={handleSignOut}
-          title={collapsed ? "Logout" : undefined}
-          className={`flex h-11 w-full items-center gap-3 rounded-xl px-3 text-sm font-medium text-muted-foreground transition hover:bg-red-500/10 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-red-500/20 ${
-            collapsed ? "justify-center" : ""
-          }`}
-        >
-          <LogOut size={18} />
-          {!collapsed && <span>Logout</span>}
-        </button>
       </div>
     </aside>
   );

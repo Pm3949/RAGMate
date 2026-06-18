@@ -72,7 +72,7 @@ export async function createRazorpayOrder(planTier, billingCycle, limits = {}) {
       key: orderData.key,
       amount: orderData.amount,
       currency: orderData.currency,
-      name: "RAGMate",
+      name: "BlinkBot",
       description: `${planTier} Plan (${billingCycle})`,
       order_id: orderData.order_id,
       handler: async function (response) {

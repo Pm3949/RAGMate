@@ -16,7 +16,7 @@ export default function PublicRoute({
   } = useAuth();
 
   if (loading) {
-    return <PageLoader text="Loading RAGMate..." />;
+    return <PageLoader text="Loading BlinkBot..." />;
   }
 
   if (user) {

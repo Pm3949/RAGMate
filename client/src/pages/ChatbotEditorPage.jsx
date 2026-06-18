@@ -85,7 +85,7 @@ export default function ChatbotEditorPage() {
   };
 
   // Dynamically use the current frontend's domain for the widget.js script URL
-  const embedCode = `<!-- RAGMate Chatbot Widget -->\n
+  const embedCode = `<!-- BlinkBot Chatbot Widget -->\n
 <script defer src="${window.location.origin}/widget.js"
   data-chatbot-id="${chatbotId}">
 </script>`;
@@ -449,7 +449,7 @@ export default function ChatbotWidget() {
                     </div>
                   </div>
                   <div className="text-center mt-2">
-                    <span className="text-[10px] text-gray-400 font-medium">Powered by RAGMate</span>
+                    <span className="text-[10px] text-gray-400 font-medium">Powered by BlinkBot</span>
                   </div>
                 </div>
               </div>

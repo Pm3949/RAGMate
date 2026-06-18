@@ -1,8 +1,8 @@
 import React, { useState, useMemo } from "react";
-import { Dialog, DialogContent } from "../ui/dialog";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "../ui/sheet";
 import { Button } from "../ui/button";
 import { Switch } from "../ui/switch";
-import { Globe, Loader2, Bot, Brain, Key, FileText, Sparkles, Code, Network, Plus, Trash2 } from "lucide-react";
+import { Globe, Loader2, Bot, Brain, Key, FileText, Sparkles, Code, Network, Plus, Trash2, Settings2 } from "lucide-react";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { useProjectTools } from "../../hooks/useAgents";
 import { toast } from "sonner";
@@ -111,51 +111,45 @@ export default function AgentSettingsModal({ agent, onClose }) {
   };
 
   return (
-    <Dialog open={!!agent} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-5xl h-[85vh] flex p-0 overflow-hidden border-0 bg-background shadow-2xl rounded-2xl">
-        {/* Sidebar */}
-        <div className="w-64 bg-muted/30 border-r border-border p-4 flex flex-col gap-2 relative">
-          <div className="mb-6 px-2 mt-4">
-            <h2 className="font-bold text-xl truncate" title={agent?.name}>{agent?.name}</h2>
-            <p className="text-xs text-muted-foreground mt-1 uppercase tracking-wider font-semibold">Agent Settings</p>
-          </div>
-          
-          <button 
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium text-sm ${activeTab === 'identity' ? 'bg-primary text-primary-foreground shadow-md' : 'hover:bg-muted text-muted-foreground hover:text-foreground'}`} 
-            onClick={() => setActiveTab('identity')}
-          >
-            <Bot size={18} /> Identity
-          </button>
-          <button 
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium text-sm ${activeTab === 'model' ? 'bg-primary text-primary-foreground shadow-md' : 'hover:bg-muted text-muted-foreground hover:text-foreground'}`} 
-            onClick={() => setActiveTab('model')}
-          >
-            <Sparkles size={18} /> AI Model
-          </button>
-          <button 
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium text-sm ${activeTab === 'knowledge' ? 'bg-primary text-primary-foreground shadow-md' : 'hover:bg-muted text-muted-foreground hover:text-foreground'}`} 
-            onClick={() => setActiveTab('knowledge')}
-          >
-            <Brain size={18} /> Knowledge Base
-          </button>
-          <button 
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium text-sm ${activeTab === 'behavior' ? 'bg-primary text-primary-foreground shadow-md' : 'hover:bg-muted text-muted-foreground hover:text-foreground'}`} 
-            onClick={() => setActiveTab('behavior')}
-          >
-            <FileText size={18} /> Behavior & Output
-          </button>
-          <button 
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium text-sm ${activeTab === 'endpoints' ? 'bg-primary text-primary-foreground shadow-md' : 'hover:bg-muted text-muted-foreground hover:text-foreground'}`} 
-            onClick={() => setActiveTab('endpoints')}
-          >
-            <Network size={18} /> API Endpoints
-          </button>
-        </div>
+    <Sheet open={!!agent} onOpenChange={(open) => !open && onClose()}>
+      <SheetContent className="p-0 flex flex-col sm:max-w-xl md:max-w-2xl lg:max-w-4xl bg-background border-l border-border/50 shadow-2xl">
+        <SheetHeader className="p-6 border-b border-border/50 bg-muted/10">
+          <SheetTitle className="text-xl flex items-center gap-2">
+            <Settings2 className="text-primary" size={24} />
+            Agent Settings: {agent.name}
+          </SheetTitle>
+          <SheetDescription>
+            Modify your agent's identity, behavior, models, and external API capabilities.
+          </SheetDescription>
+        </SheetHeader>
 
-        {/* Main Content Area */}
-        <div className="flex-1 flex flex-col overflow-hidden bg-background">
-          <div className="flex-1 p-8 overflow-y-auto">
-            <div className="max-w-2xl">
+        <div className="flex flex-1 overflow-hidden min-h-[500px]">
+          {/* Sidebar */}
+          <div className="w-1/3 border-r border-border/50 bg-muted/10 p-4 space-y-1 overflow-y-auto">
+            {[
+              { id: "identity", label: "Identity", icon: Bot },
+              { id: "behavior", label: "Behavior", icon: Brain },
+              { id: "model", label: "Model & AI", icon: Sparkles },
+              { id: "endpoints", label: "API Endpoints", icon: Network },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-sm font-medium ${
+                  activeTab === tab.id
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                }`}
+              >
+                <tab.icon size={18} />
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Content */}
+          <div className="flex-1 overflow-y-auto bg-card">
+            <div className="p-8 max-w-2xl">
               
               {activeTab === 'identity' && (
                 <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
@@ -251,60 +245,6 @@ export default function AgentSettingsModal({ agent, onClose }) {
                         />
                       </div>
                     )}
-                  </div>
-                </div>
-              )}
-
-              {activeTab === 'knowledge' && (
-                <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
-                  <div>
-                    <h3 className="text-2xl font-bold">Knowledge Base</h3>
-                    <p className="text-muted-foreground text-sm mt-1">Configure how the agent reads and searches documents.</p>
-                  </div>
-                  <div className="space-y-5 bg-card p-6 rounded-2xl border border-border shadow-sm">
-                    <div>
-                      <label className="block text-sm font-semibold mb-1.5">Embedding Model</label>
-                      <Select value={formData.embedding_model} onValueChange={(val) => updateField("embedding_model", val)}>
-                        <SelectTrigger className="w-full rounded-xl py-5">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {EMBEDDING_MODELS.map((m) => (
-                            <SelectItem key={m.id} value={m.id} disabled={m.disabled}>{m.name}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-semibold mb-1.5">Chunking Strategy</label>
-                      <Select value={formData.chunk_strategy} onValueChange={(val) => updateField("chunk_strategy", val)}>
-                        <SelectTrigger className="w-full rounded-xl py-5">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {CHUNKING_STRATEGIES.map((c) => (
-                            <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div className="pt-5 border-t border-border mt-5 flex items-center justify-between">
-                      <div>
-                        <h4 className="font-semibold flex items-center gap-2">
-                          <Globe size={18} className="text-blue-500" />
-                          Web Search Fallback
-                        </h4>
-                        <p className="text-sm text-muted-foreground mt-1 leading-relaxed max-w-[280px]">
-                          Allow the agent to search the internet if the answer isn't in its uploaded documents.
-                        </p>
-                      </div>
-                      <Switch 
-                        checked={formData.web_search_enabled}
-                        onCheckedChange={(val) => updateField("web_search_enabled", val)}
-                      />
-                    </div>
                   </div>
                 </div>
               )}
@@ -553,19 +493,19 @@ export default function AgentSettingsModal({ agent, onClose }) {
 
             </div>
           </div>
-
-          {/* Footer */}
-          <div className="p-5 border-t border-border bg-card/50 flex justify-end gap-3 backdrop-blur-sm">
-            <Button variant="outline" className="rounded-xl px-6" onClick={onClose}>
-              Cancel
-            </Button>
-            <Button className="rounded-xl px-8 shadow-md" onClick={handleSave} disabled={updateAgentMutation.isPending}>
-              {updateAgentMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Save Changes
-            </Button>
-          </div>
         </div>
-      </DialogContent>
-    </Dialog>
+
+        {/* Footer */}
+        <div className="p-5 border-t border-border/50 bg-muted/10 flex justify-end gap-3">
+          <Button variant="outline" className="rounded-xl px-6" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button className="rounded-xl px-8 shadow-md" onClick={handleSave} disabled={updateAgentMutation.isPending}>
+            {updateAgentMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Save Changes
+          </Button>
+        </div>
+      </SheetContent>
+    </Sheet>
   );
 }

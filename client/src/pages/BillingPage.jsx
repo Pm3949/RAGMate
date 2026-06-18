@@ -98,7 +98,7 @@ export default function BillingPage() {
     {
       title: "Starter",
       price: annualBilling ? "0" : "0",
-      description: "Perfect for exploring RAGMate.",
+      description: "Perfect for exploring BlinkBot.",
       icon: Zap,
       features: [
         "1 AI Agent",

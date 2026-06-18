@@ -22,12 +22,12 @@ export default function Logo() {
         font-bold
       "
       >
-        R
+        B
       </div>
 
       <div>
         <div className="font-bold">
-          RAGMate
+          BlinkBot
         </div>
 
         <div

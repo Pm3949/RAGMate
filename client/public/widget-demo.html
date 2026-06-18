@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RAGMate Chat Widget Demo</title>
+  <title>BlinkBot Chat Widget Demo</title>
   
   <!-- Modern Typography (Inter) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -135,7 +135,7 @@
     }
 
     /* FLOATING CHAT WIDGET */
-    #ragmate-widget-bubble {
+    #blinkbot-widget-bubble {
       position: fixed;
       bottom: 30px;
       right: 30px;
@@ -152,12 +152,12 @@
       transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    #ragmate-widget-bubble:hover {
+    #blinkbot-widget-bubble:hover {
       transform: scale(1.1);
       box-shadow: 0 12px 30px rgba(79, 70, 229, 0.6);
     }
 
-    #ragmate-widget-bubble svg {
+    #blinkbot-widget-bubble svg {
       width: 28px;
       height: 28px;
       fill: none;
@@ -169,7 +169,7 @@
     }
 
     /* Widget Window */
-    #ragmate-widget-container {
+    #blinkbot-widget-container {
       position: fixed;
       bottom: 105px;
       right: 30px;
@@ -188,7 +188,7 @@
       animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    #ragmate-widget-container.open {
+    #blinkbot-widget-container.open {
       display: flex;
     }
 
@@ -394,7 +394,7 @@
 
   <!-- Demo Settings Container -->
   <div class="container">
-    <h1>RAGMate Widget Tester</h1>
+    <h1>BlinkBot Widget Tester</h1>
     <p class="subtitle">Enter your Chatbot credentials below to test the widget client locally.</p>
     
     <div class="config-group">
@@ -412,20 +412,20 @@
   </div>
 
   <!-- FLOATING WIDGET ELEMENT -->
-  <div id="ragmate-widget-bubble" onclick="toggleWidget()">
+  <div id="blinkbot-widget-bubble" onclick="toggleWidget()">
     <svg viewBox="0 0 24 24">
       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
     </svg>
   </div>
 
   <!-- FLOATING WIDGET CONTAINER -->
-  <div id="ragmate-widget-container">
+  <div id="blinkbot-widget-container">
     <div class="widget-header">
       <div class="widget-title-area">
         <div class="widget-avatar">🤖</div>
         <div class="widget-title-text">
-          <h3 id="widget-bot-name">RAGMate Assistant</h3>
-          <p>Online | Powered by RAGMate</p>
+          <h3 id="widget-bot-name">BlinkBot Assistant</h3>
+          <p>Online | Powered by BlinkBot</p>
         </div>
       </div>
       <button class="widget-close-btn" onclick="toggleWidget()">&times;</button>
@@ -476,7 +476,7 @@
     }
 
     function toggleWidget() {
-      const container = document.getElementById("ragmate-widget-container");
+      const container = document.getElementById("blinkbot-widget-container");
       container.classList.toggle("open");
       if (container.classList.contains("open")) {
         document.getElementById("widgetInput").focus();

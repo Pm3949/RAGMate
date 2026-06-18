@@ -17,7 +17,7 @@ import "./index.css";
 
 try {
   const storedTheme = JSON.parse(
-    localStorage.getItem("ragmate-ui") || "{}",
+    localStorage.getItem("blinkbot-ui") || "{}",
   );
 
   document.documentElement.classList.toggle(

@@ -1,7 +1,7 @@
 import React from "react";
 import { Loader2 } from "lucide-react";
 
-export default function PageLoader({ text = "Loading RAGMate..." }) {
+export default function PageLoader({ text = "Loading BlinkBot..." }) {
   return (
     <div className="flex flex-col min-h-screen items-center justify-center bg-background text-foreground z-50">
       <div className="relative flex items-center justify-center mb-6">

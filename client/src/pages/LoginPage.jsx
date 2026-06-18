@@ -92,12 +92,12 @@ export default function LoginPage() {
 
           <p className="text-orange-50/85 mt-5 max-w-lg text-lg dark:text-zinc-300">
             Sign in to manage agents, documents, chats,
-            notes, and analytics from one RagMate workspace.
+            notes, and analytics from one BlinkBot workspace.
           </p>
         </div>
 
         <p className="text-sm text-orange-50/75 dark:text-zinc-400">
-          RagMate AI Operating System
+          BlinkBot AI Operating System
         </p>
       </div>
 
@@ -124,8 +124,8 @@ export default function LoginPage() {
 
               <p className="text-slate-500 mt-2 dark:text-zinc-400">
                 {isSignUp
-                  ? "Create your RagMate workspace access."
-                  : "Sign in to continue to RagMate."}
+                  ? "Create your BlinkBot workspace access."
+                  : "Sign in to continue to BlinkBot."}
               </p>
             </div>
 

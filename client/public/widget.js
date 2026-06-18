@@ -4,18 +4,18 @@
 
   const chatbotId = scriptTag.getAttribute('data-chatbot-id');
   if (!chatbotId) {
-    console.error('RAGMate Widget Error: data-chatbot-id attribute is missing.');
+    console.error('BlinkBot Widget Error: data-chatbot-id attribute is missing.');
     return;
   }
 
   // Configurations with local development fallbacks
-  const apiUrl = scriptTag.getAttribute('data-api-url') || 'https://ragmate.onrender.com';
+  const apiUrl = scriptTag.getAttribute('data-api-url') || 'https://blinkbot.onrender.com';
   const supabaseUrl = scriptTag.getAttribute('data-supabase-url') || 'https://phqaaugotzmxjgjzhvhp.supabase.co';
   const supabaseKey = scriptTag.getAttribute('data-supabase-key') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBocWFhdWdvdHpteGpnanpodmhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4ODUxNjcsImV4cCI6MjA5NTQ2MTE2N30.dUDdQVQgRrDYQWR8IiVw2DNNDlfg8XxD14rLjBAuDE0';
 
   // Default Chatbot styling settings
   let botSettings = {
-    name: 'RAGMate Assistant',
+    name: 'BlinkBot Assistant',
     themeColor: '#4f46e5',
     welcomeMessage: 'Hi there! How can I help you today?',
     position: 'bottom-right',
@@ -71,7 +71,7 @@
         }
       }
     } catch (err) {
-      console.warn('RAGMate Widget: Failed to fetch settings from Supabase, using defaults.', err);
+      console.warn('BlinkBot Widget: Failed to fetch settings from Supabase, using defaults.', err);
     }
   }
 
@@ -79,7 +79,7 @@
   function injectStyles() {
     const styleEl = document.createElement('style');
     styleEl.innerHTML = `
-      #ragmate-bubble {
+      #blinkbot-bubble {
         position: fixed;
         bottom: 30px;
         width: 60px;
@@ -94,16 +94,16 @@
         z-index: 2147483640;
         transition: transform 0.2s ease, opacity 0.2s ease;
       }
-      #ragmate-bubble:hover {
+      #blinkbot-bubble:hover {
         transform: scale(1.08);
       }
-      #ragmate-bubble.bottom-right {
+      #blinkbot-bubble.bottom-right {
         right: 30px;
       }
-      #ragmate-bubble.bottom-left {
+      #blinkbot-bubble.bottom-left {
         left: 30px;
       }
-      #ragmate-bubble svg {
+      #blinkbot-bubble svg {
         width: 28px;
         height: 28px;
         fill: none;
@@ -112,7 +112,7 @@
         stroke-linecap: round;
         stroke-linejoin: round;
       }
-      #ragmate-window {
+      #blinkbot-window {
         position: fixed;
         bottom: 105px;
         width: 380px;
@@ -129,13 +129,13 @@
         z-index: 2147483641;
         font-family: ${botSettings.fontFamily === 'system-ui' ? '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' : botSettings.fontFamily + ', sans-serif'};
       }
-      #ragmate-window.bottom-right {
+      #blinkbot-window.bottom-right {
         right: 30px;
       }
-      #ragmate-window.bottom-left {
+      #blinkbot-window.bottom-left {
         left: 30px;
       }
-      #ragmate-window.open {
+      #blinkbot-window.open {
         display: flex;
       }
       .rm-header {
@@ -311,7 +311,7 @@
   function injectHTML() {
     // Bubble Trigger
     const bubble = document.createElement('div');
-    bubble.id = 'ragmate-bubble';
+    bubble.id = 'blinkbot-bubble';
     bubble.style.backgroundColor = botSettings.themeColor;
     bubble.className = botSettings.position;
     bubble.innerHTML = botSettings.avatar && botSettings.avatar !== "🤖" ? `<span style="font-size: 24px;">${botSettings.avatar}</span>` : `
@@ -324,7 +324,7 @@
 
     // Chat Window
     const windowDiv = document.createElement('div');
-    windowDiv.id = 'ragmate-window';
+    windowDiv.id = 'blinkbot-window';
     windowDiv.className = `${botSettings.position}`;
     windowDiv.innerHTML = `
       <div class="rm-header" style="background-color: ${botSettings.themeColor}">
@@ -334,46 +334,46 @@
           </div>
           <div>
             <h4>${botSettings.name}</h4>
-            <p>Online | Powered by RAGMate</p>
+            <p>Online | Powered by BlinkBot</p>
           </div>
         </div>
         <div style="display: flex; align-items: center;">
-          <select id="ragmate-lang-select" class="rm-lang-select" title="Select STT/TTS Language">
+          <select id="blinkbot-lang-select" class="rm-lang-select" title="Select STT/TTS Language">
             ${LANGUAGES.map(l => `<option value="${l.id}">${l.name}</option>`).join('')}
           </select>
-          <button class="rm-close" id="ragmate-close-btn">&times;</button>
+          <button class="rm-close" id="blinkbot-close-btn">&times;</button>
         </div>
       </div>
-      <div class="rm-messages" id="ragmate-messages">
+      <div class="rm-messages" id="blinkbot-messages">
         <div class="rm-msg bot">${botSettings.welcomeMessage}</div>
       </div>
       <div style="background: white;">
         <div class="rm-input-area">
-          <input type="text" class="rm-input" id="ragmate-input" placeholder="Ask a question...">
-          <button class="rm-mic" id="ragmate-mic-btn" title="Start recording">
+          <input type="text" class="rm-input" id="blinkbot-input" placeholder="Ask a question...">
+          <button class="rm-mic" id="blinkbot-mic-btn" title="Start recording">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
           </button>
-          <button class="rm-send" id="ragmate-send-btn" style="background-color: ${botSettings.themeColor}">
+          <button class="rm-send" id="blinkbot-send-btn" style="background-color: ${botSettings.themeColor}">
             <svg viewBox="0 0 24 24">
               <line x1="22" y1="2" x2="11" y2="13"></line>
               <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
             </svg>
           </button>
         </div>
-        <div class="rm-brand">Powered by RAGMate</div>
+        <div class="rm-brand">Powered by BlinkBot</div>
       </div>
     `;
 
     document.body.appendChild(windowDiv);
 
     // Add event listeners
-    document.getElementById('ragmate-close-btn').onclick = toggleChat;
-    document.getElementById('ragmate-send-btn').onclick = handleSend;
-    document.getElementById('ragmate-mic-btn').onclick = toggleMic;
-    document.getElementById('ragmate-input').onkeypress = function (e) {
+    document.getElementById('blinkbot-close-btn').onclick = toggleChat;
+    document.getElementById('blinkbot-send-btn').onclick = handleSend;
+    document.getElementById('blinkbot-mic-btn').onclick = toggleMic;
+    document.getElementById('blinkbot-input').onkeypress = function (e) {
       if (e.key === 'Enter') handleSend();
     };
-    document.getElementById('ragmate-lang-select').onchange = function (e) {
+    document.getElementById('blinkbot-lang-select').onchange = function (e) {
       currentLanguage = e.target.value;
     };
   }
@@ -383,8 +383,8 @@
   let isRecording = false;
 
   async function toggleMic() {
-    const micBtn = document.getElementById('ragmate-mic-btn');
-    const inputEl = document.getElementById('ragmate-input');
+    const micBtn = document.getElementById('blinkbot-mic-btn');
+    const inputEl = document.getElementById('blinkbot-input');
 
     if (isRecording) {
       if (mediaRecorder) {
@@ -439,10 +439,10 @@
 
   function toggleChat() {
     isOpen = !isOpen;
-    const windowEl = document.getElementById('ragmate-window');
+    const windowEl = document.getElementById('blinkbot-window');
     if (isOpen) {
       windowEl.classList.add('open');
-      document.getElementById('ragmate-input').focus();
+      document.getElementById('blinkbot-input').focus();
     } else {
       windowEl.classList.remove('open');
     }
@@ -524,13 +524,13 @@
   }
 
   async function handleSend() {
-    const inputEl = document.getElementById('ragmate-input');
+    const inputEl = document.getElementById('blinkbot-input');
     const text = inputEl.value.trim();
     if (!text) return;
 
     inputEl.value = '';
 
-    const messagesEl = document.getElementById('ragmate-messages');
+    const messagesEl = document.getElementById('blinkbot-messages');
 
     // 1. Append User Message
     const userMsg = document.createElement('div');

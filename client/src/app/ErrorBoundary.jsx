@@ -14,7 +14,7 @@ export default class ErrorBoundary extends Component {
   }
 
   componentDidCatch(error, info) {
-    console.error("RagMate render error", error, info);
+    console.error("BlinkBot render error", error, info);
   }
 
   render() {
@@ -27,7 +27,7 @@ export default class ErrorBoundary extends Component {
             </h1>
 
             <p className="mt-3 text-sm text-slate-500 dark:text-zinc-400">
-              RagMate hit an unexpected rendering error. Refresh the page to try again.
+              BlinkBot hit an unexpected rendering error. Refresh the page to try again.
             </p>
 
             <button

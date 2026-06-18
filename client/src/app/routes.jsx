@@ -22,6 +22,8 @@ import BillingPage from "../pages/BillingPage";
 import LandingPage from "../pages/LandingPage";
 import UserGuidePage from "../pages/UserGuidePage";
 import TermsPage from "../pages/TermsPage";
+import AboutPage from "../pages/AboutPage";
+import BlogPage from "../pages/BlogPage";
 
 export const router = createBrowserRouter([
   // ── Public routes ───────────────────────────────────────────────
@@ -48,6 +50,14 @@ export const router = createBrowserRouter([
   {
     path: "/terms",
     element: <TermsPage />,
+  },
+  {
+    path: "/about",
+    element: <AboutPage />,
+  },
+  {
+    path: "/blog",
+    element: <BlogPage />,
   },
 
   // ── Protected shell (all app pages live here) ────────────────────

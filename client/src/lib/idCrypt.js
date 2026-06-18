@@ -21,8 +21,8 @@
 // ─── Key material ────────────────────────────────────────────
 // Falls back to a hard-coded salt if VITE_SUPABASE_URL is absent.
 const RAW_KEY =
-  (import.meta.env.VITE_SUPABASE_URL || "ragmate-default-obfuscation-key-2024") +
-  "-ragmate-id-obf";
+  (import.meta.env.VITE_SUPABASE_URL || "blinkbot-default-obfuscation-key-2024") +
+  "-blinkbot-id-obf";
 
 /**
  * Expand the raw key string into a repeating byte-array of the

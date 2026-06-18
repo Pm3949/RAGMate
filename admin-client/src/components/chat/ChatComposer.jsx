@@ -54,7 +54,7 @@ export default function ChatComposer({
           }
           onKeyDown={handleKeyDown}
           disabled={disabled || isLoading}
-          placeholder="Ask RagMate anything..."
+          placeholder="Ask BlinkBot anything..."
           className="
           flex-1
           resize-none

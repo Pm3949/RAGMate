@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "../ui/dialog";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "../ui/sheet";
 import { Button } from "../ui/button";
 import { Loader2, Wrench, Globe, Save, Plus } from "lucide-react";
 import { useProjectTools, useUpdateTool, useCreateTool } from "../../hooks/useAgents";
@@ -70,21 +70,19 @@ export default function ApiToolsModal({ project, onClose }) {
   };
 
   return (
-    <Dialog open={!!project} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-4xl max-h-[85vh] flex flex-col p-0 overflow-hidden bg-background">
-        <div className="p-6 pb-4 border-b border-border bg-card">
-          <DialogHeader>
-            <DialogTitle className="text-xl flex items-center gap-2">
-              <Wrench className="text-primary" size={24} />
-              API Connections Manager
-            </DialogTitle>
-            <DialogDescription>
-              Configure the base URLs and authentication keys for your external API services. Agents can define specific endpoints under these connections.
-            </DialogDescription>
-          </DialogHeader>
-        </div>
+    <Sheet open={!!project} onOpenChange={(open) => !open && onClose()}>
+      <SheetContent className="p-0 flex flex-col sm:max-w-xl md:max-w-2xl lg:max-w-4xl bg-background border-l border-border/50 shadow-2xl">
+        <SheetHeader className="p-6 border-b border-border/50 bg-muted/10">
+          <SheetTitle className="text-xl flex items-center gap-2">
+            <Wrench className="text-primary" size={24} />
+            API Connections Manager
+          </SheetTitle>
+          <SheetDescription>
+            Configure the base URLs and authentication keys for your external API services. Agents can define specific endpoints under these connections.
+          </SheetDescription>
+        </SheetHeader>
 
-        <div className="flex flex-1 overflow-hidden min-h-[400px]">
+        <div className="flex flex-1 overflow-hidden min-h-[500px]">
           {/* Sidebar */}
           <div className="w-1/3 border-r border-border bg-muted/20 p-4 overflow-y-auto flex flex-col">
             <Button variant="outline" className="w-full mb-4 justify-start border-dashed border-primary/50 text-primary hover:text-primary hover:bg-primary/10" onClick={handleCreateNewTool} disabled={createToolMutation.isPending}>
@@ -208,7 +206,8 @@ export default function ApiToolsModal({ project, onClose }) {
             )}
           </div>
         </div>
-      </DialogContent>
-    </Dialog>
+
+      </SheetContent>
+    </Sheet>
   );
 }

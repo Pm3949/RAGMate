@@ -13,12 +13,12 @@ from fastapi.staticfiles import StaticFiles
 from core.dependencies import UPLOAD_DIR
 
 # Import routers
-from routers import documents, analytics, admin, billing, chat, workspaces, agents, chatbots, settings, feedback, notifications, meta_agent
+from routers import documents, analytics, admin, billing, chat, workspaces, agents, chatbots, settings, feedback, notifications, meta_agent, demo
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
-app = FastAPI(title="Custom RAGMate Backend")
+app = FastAPI(title="Custom BlinkBot Backend")
 
 # Initialize Groq client
 try:
@@ -60,6 +60,7 @@ app.include_router(settings.router)
 app.include_router(feedback.router)
 app.include_router(notifications.router)
 app.include_router(meta_agent.router)
+app.include_router(demo.router)
 
 # Mount uploads directory
 app.mount("/uploads", StaticFiles(directory=str(UPLOAD_DIR)), name="uploads")
@@ -114,5 +115,5 @@ async def speech_to_text(file: UploadFile = File(...), language: str = Form(None
 if __name__ == "__main__":
     import uvicorn
 
-    logger.info("🚀 Starting Modular RAGMate Server on Port 8000...")
+    logger.info("🚀 Starting Modular BlinkBot Server on Port 8000...")
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

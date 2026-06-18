@@ -84,8 +84,8 @@ def send_invite_email(
 
     try:
         msg = MIMEMultipart("alternative")
-        msg["Subject"] = f"Invitation to join '{workspace_name}' workspace on RagMate"
-        msg["From"] = f"RagMate Team <{smtp_user}>"
+        msg["Subject"] = f"Invitation to join '{workspace_name}' workspace on BlinkBot"
+        msg["From"] = f"BlinkBot Team <{smtp_user}>"
         msg["To"] = to_email
 
         html_content = f"""
@@ -94,7 +94,7 @@ def send_invite_email(
             <div style="max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px;">
               <h2 style="color: #4f46e5; margin-bottom: 20px;">You are invited!</h2>
               <p>Hello,</p>
-              <p><strong>{invited_by}</strong> has invited you to collaborate in the workspace <strong>{workspace_name}</strong> on RagMate.</p>
+              <p><strong>{invited_by}</strong> has invited you to collaborate in the workspace <strong>{workspace_name}</strong> on BlinkBot.</p>
               <p>To accept this invitation and access the workspace, click the button below to sign up or log in:</p>
               <p style="text-align: center; margin: 30px 0;">
                 <a href="{signup_url}" style="background-color: #4f46e5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">Accept Invitation</a>

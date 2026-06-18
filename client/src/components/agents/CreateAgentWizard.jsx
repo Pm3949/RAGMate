@@ -27,6 +27,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "../ui/sheet";
 
 export const providers = [
   {
@@ -274,25 +275,15 @@ export default function CreateAgentWizard({ onClose, projectId = null, parentAge
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-sm flex justify-center items-center p-6">
-      <div className="bg-card text-foreground rounded-[32px] shadow-2xl w-full max-w-4xl overflow-hidden border border-border">
-        <div className="border-b border-border p-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-3xl font-bold">Create Agent</h2>
-              <p className="text-muted-foreground mt-2">Configure your AI assistant.</p>
-            </div>
+    <Sheet open={true} onOpenChange={(open) => !open && onClose()}>
+      <SheetContent className="p-0 flex flex-col sm:max-w-xl md:max-w-2xl lg:max-w-4xl bg-background border-l border-border/50 shadow-2xl">
+        <SheetHeader className="p-8 border-b border-border/50 bg-muted/10">
+          <SheetTitle className="text-3xl font-bold">Create Agent</SheetTitle>
+          <SheetDescription>Configure your AI assistant.</SheetDescription>
+        </SheetHeader>
 
-            <button
-              onClick={onClose}
-              className="p-3 rounded-2xl hover:bg-muted transition-colors"
-              disabled={createAgentMutation.isPending}
-            >
-              <X />
-            </button>
-          </div>
-
-          <div className="mt-8 flex items-center">
+        <div className="flex-1 overflow-y-auto flex flex-col p-8 bg-card">
+          <div className="mb-8 flex items-center">
             {[1, 2, 3, 4].map((item) => (
               <div
                 key={item}
@@ -336,331 +327,351 @@ export default function CreateAgentWizard({ onClose, projectId = null, parentAge
               </div>
             ))}
           </div>
-        </div>
 
-        <div className="p-8 min-h-[450px]">
-          {step === 1 && (
-            <div className="animate-message">
-              <div className="mb-8 p-6 bg-gradient-to-r from-purple-500/10 to-indigo-500/10 rounded-3xl border border-purple-500/20">
-                <div className="flex items-center gap-2 mb-3">
-                  <Sparkles className="text-purple-600 dark:text-purple-400" size={20} />
-                  <h4 className="font-bold text-purple-800 dark:text-purple-300">✨ Auto-Fill with AI</h4>
+          <div className="flex-1 min-h-[450px]">
+            {step === 1 && (
+              <div className="animate-message">
+                <div className="mb-8 p-6 bg-gradient-to-r from-purple-500/10 to-indigo-500/10 rounded-3xl border border-purple-500/20">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Sparkles className="text-purple-600 dark:text-purple-400" size={20} />
+                    <h4 className="font-bold text-purple-800 dark:text-purple-300">✨ Auto-Fill with AI</h4>
+                  </div>
+                  <div className="flex gap-3">
+                    <input
+                      value={autoPrompt}
+                      onChange={(e) => setAutoPrompt(e.target.value)}
+                      placeholder="Describe your agent (e.g., 'A helpful sales agent that outputs JSON...')"
+                      className="flex-1 bg-background border border-purple-500/30 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-purple-500/50"
+                      disabled={isGenerating}
+                      onKeyDown={(e) => e.key === 'Enter' && handleAutoGenerate()}
+                    />
+                    <button
+                      onClick={handleAutoGenerate}
+                      disabled={isGenerating || !autoPrompt.trim()}
+                      className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-xl transition-all disabled:opacity-50 flex items-center gap-2"
+                    >
+                      {isGenerating ? <Loader2 size={18} className="animate-spin" /> : "Generate"}
+                    </button>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-3 font-medium">Describe what you want, and we'll write the prompt, description, and formatting rules for you automatically.</p>
                 </div>
-                <div className="flex gap-3">
-                  <input
-                    value={autoPrompt}
-                    onChange={(e) => setAutoPrompt(e.target.value)}
-                    placeholder="Describe your agent (e.g., 'A helpful sales agent that outputs JSON...')"
-                    className="flex-1 bg-background border border-purple-500/30 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-purple-500/50"
-                    disabled={isGenerating}
-                    onKeyDown={(e) => e.key === 'Enter' && handleAutoGenerate()}
-                  />
-                  <button
-                    onClick={handleAutoGenerate}
-                    disabled={isGenerating || !autoPrompt.trim()}
-                    className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-xl transition-all disabled:opacity-50 flex items-center gap-2"
-                  >
-                    {isGenerating ? <Loader2 size={18} className="animate-spin" /> : "Generate"}
-                  </button>
+
+                <div className="flex items-center gap-3 mb-8">
+                  <Bot className="text-primary" />
+                  <h3 className="text-2xl font-bold">Identity</h3>
                 </div>
-                <p className="text-xs text-muted-foreground mt-3 font-medium">Describe what you want, and we'll write the prompt, description, and formatting rules for you automatically.</p>
+
+                <div className="space-y-6">
+                  <div>
+                    <label className="font-medium block mb-2">Agent Name</label>
+                    <input
+                      value={formData.name}
+                      onChange={(event) =>
+                        updateField("name", event.target.value)
+                      }
+                      className="
+                      w-full
+                      border
+                      border-border
+                      bg-background
+                      text-foreground
+                      rounded-2xl
+                      px-4
+                      py-4
+                    "
+                      placeholder="Customer Support AI"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="font-medium block mb-2">Description</label>
+                    <textarea
+                      rows={3}
+                      value={formData.description}
+                      onChange={(event) =>
+                        updateField("description", event.target.value)
+                      }
+                      className="
+                      w-full
+                      border
+                      border-border
+                      bg-background
+                      text-foreground
+                      rounded-2xl
+                      px-4
+                      py-4
+                      resize-y
+                    "
+                      placeholder="What does this agent do?"
+                    />
+                  </div>
+                </div>
               </div>
+            )}
 
-              <div className="flex items-center gap-3 mb-8">
-                <Bot className="text-primary" />
-                <h3 className="text-2xl font-bold">Identity</h3>
+            {step === 2 && (
+              <div className="animate-message">
+                <div className="flex items-center gap-3 mb-8">
+                  <FileText className="text-primary" />
+                  <h3 className="text-2xl font-bold">Behavior</h3>
+                </div>
+
+                <div className="space-y-6">
+                  <div>
+                    <label className="font-medium block mb-2">
+                      System Prompt
+                    </label>
+                    <textarea
+                      rows={6}
+                      value={formData.system_prompt}
+                      onChange={(event) =>
+                        updateField("system_prompt", event.target.value)
+                      }
+                      className="
+                      w-full
+                      border
+                      border-border
+                      bg-background
+                      text-foreground
+                      rounded-2xl
+                      px-4
+                      py-4
+                      font-mono
+                      text-sm
+                      resize-y
+                    "
+                      placeholder="You are a helpful assistant..."
+                    />
+                  </div>
+                  <div>
+                    <label className="font-medium block mb-2 flex items-center gap-2">
+                      Output Format Instructions
+                      <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">Optional</span>
+                    </label>
+                    <textarea
+                      rows={4}
+                      value={formData.output_format}
+                      onChange={(event) =>
+                        updateField("output_format", event.target.value)
+                      }
+                      className="
+                      w-full
+                      border
+                      border-border
+                      bg-background
+                      text-foreground
+                      rounded-2xl
+                      px-4
+                      py-4
+                      font-mono
+                      text-sm
+                      resize-y
+                    "
+                      placeholder="Provide constraints like 'Always respond in JSON format'"
+                    />
+                  </div>
+                </div>
               </div>
+            )}
 
-              <div className="space-y-6">
-                <div>
-                  <label className="font-medium block mb-2">Agent Name</label>
-                  <input
-                    value={formData.name}
-                    onChange={(event) =>
-                      updateField("name", event.target.value)
-                    }
-                    className="
-                    w-full
-                    border
-                    border-border
-                    bg-background
-                    text-foreground
-                    rounded-2xl
-                    px-4
-                    py-4
-                  "
-                    placeholder="Customer Support AI"
-                  />
+            {step === 3 && (
+              <div className="animate-message">
+                <div className="flex items-center gap-3 mb-8">
+                  <Brain className="text-primary" />
+                  <h3 className="text-2xl font-bold">Knowledge Base</h3>
                 </div>
 
-                <div>
-                  <label className="font-medium block mb-2">Description</label>
-                  <textarea
-                    rows={3}
-                    value={formData.description}
-                    onChange={(event) =>
-                      updateField("description", event.target.value)
-                    }
-                    className="
-                    w-full
-                    border
-                    border-border
-                    bg-background
-                    text-foreground
-                    rounded-2xl
-                    px-4
-                    py-4
-                  "
-                    placeholder="Describe what this agent does..."
-                  />
+                <div className="space-y-6">
+                  <div>
+                    <label className="font-medium block mb-2">
+                      Embedding Model
+                    </label>
+                    <Select
+                      value={formData.embedding_model}
+                      onValueChange={(value) => updateField("embedding_model", value)}
+                    >
+                      <SelectTrigger className="w-full rounded-2xl py-6 bg-background">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {EMBEDDING_MODELS.map((model) => (
+                          <SelectItem
+                            key={model.id}
+                            value={model.id}
+                            disabled={model.disabled}
+                          >
+                            {model.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <label className="font-medium block mb-2">
+                      Chunking Strategy
+                    </label>
+                    <Select
+                      value={formData.chunk_strategy}
+                      onValueChange={(value) => updateField("chunk_strategy", value)}
+                    >
+                      <SelectTrigger className="w-full rounded-2xl py-6 bg-background">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {CHUNKING_STRATEGIES.map((strategy) => (
+                          <SelectItem
+                            key={strategy.id}
+                            value={strategy.id}
+                          >
+                            {strategy.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="mt-4 p-5 rounded-2xl border border-border bg-card flex items-center justify-between">
+                    <div>
+                      <h4 className="font-semibold flex items-center gap-2"><Globe size={18} className="text-blue-500" /> Web Search Fallback</h4>
+                      <p className="text-sm text-muted-foreground mt-1">Allow the agent to search the internet if the answer isn't in documents.</p>
+                    </div>
+                    <Switch
+                      checked={formData.web_search_enabled}
+                      onCheckedChange={(val) => updateField("web_search_enabled", val)}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {step === 4 && (
+              <div className="animate-message">
+                <div className="flex items-center gap-3 mb-8">
+                  <Code className="text-primary" />
+                  <h3 className="text-2xl font-bold">Model Settings</h3>
                 </div>
 
-                <div>
-                  <label className="font-medium block mb-2">Preferred Language</label>
-                  <Select
-                    value={formData.language}
-                    onValueChange={(value) => updateField("language", value)}
-                  >
-                    <SelectTrigger className="w-full h-14 rounded-2xl bg-background border-border">
-                      <SelectValue placeholder="Select Language" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {LANGUAGES.map((lang) => (
-                        <SelectItem key={lang.id} value={lang.id}>
-                          {lang.name}
-                        </SelectItem>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                  <div>
+                    <label className="font-medium block mb-2">Language</label>
+                    <Select
+                      value={formData.language}
+                      onValueChange={(value) => updateField("language", value)}
+                    >
+                      <SelectTrigger className="w-full rounded-2xl py-6 bg-background">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {LANGUAGES.map((lang) => (
+                          <SelectItem key={lang.id} value={lang.id}>
+                            {lang.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <label className="font-medium block mb-2">Provider</label>
+                    <div className="flex gap-2">
+                      {providers.map((p) => (
+                        <button
+                          key={p.id}
+                          onClick={() => updateField("provider", p.id)}
+                          className={`
+                          flex-1 px-4 py-3 rounded-2xl border text-sm font-medium transition-all
+                          ${
+                            formData.provider === p.id
+                              ? "border-primary bg-primary/10 text-primary"
+                              : "border-border bg-background hover:bg-muted"
+                          }
+                        `}
+                        >
+                          {p.name}
+                        </button>
                       ))}
-                    </SelectContent>
-                  </Select>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-6">
+                  <div>
+                    <label className="font-medium block mb-2">Model</label>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {currentModels.map((m) => (
+                        <button
+                          key={m.id}
+                          onClick={() => updateField("model", m.id)}
+                          className={`
+                          px-4 py-4 rounded-2xl border text-left transition-all
+                          ${
+                            formData.model === m.id
+                              ? "border-primary bg-primary/5 ring-1 ring-primary"
+                              : "border-border bg-background hover:bg-muted"
+                          }
+                        `}
+                        >
+                          <div className="font-medium">{m.name}</div>
+                          {m.requiresKey && (
+                            <div className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+                              <Key size={12} /> Requires API Key
+                            </div>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {selectedModel?.requiresKey && (
+                    <div className="animate-in slide-in-from-top-2">
+                      <label className="font-medium block mb-2">
+                        Provider API Key
+                      </label>
+                      <div className="relative">
+                        <Key
+                          className="
+                        absolute
+                        left-4
+                        top-1/2
+                        -translate-y-1/2
+                        text-muted-foreground
+                      "
+                        />
+
+                        <input
+                          type="password"
+                          placeholder="API Key"
+                          value={formData.api_key}
+                          onChange={(event) =>
+                            updateField("api_key", event.target.value)
+                          }
+                          className="
+                        w-full
+                        pl-12
+                        py-4
+                        rounded-2xl
+                        border
+                        border-border
+                        bg-background
+                        text-foreground
+                      "
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
-            </div>
-          )}
-
-          {step === 2 && (
-            <div className="animate-message">
-              <div className="flex items-center gap-3 mb-8">
-                <Sparkles className="text-primary" />
-                <h3 className="text-2xl font-bold">AI Model</h3>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4 mb-8">
-                {providers.map((provider) => (
-                  <button
-                    key={provider.id}
-                    onClick={() => updateField("provider", provider.id)}
-                    className={`
-                    text-left
-                    p-5
-                    rounded-3xl
-                    border
-                    transition-all
-                    hover:-translate-y-1 hover:shadow-md
-                    bg-background
-                    ${
-                      formData.provider === provider.id
-                        ? "border-primary bg-primary/5"
-                        : "border-border hover:border-primary/50"
-                    }
-                  `}
-                  >
-                    <h4 className="font-semibold">{provider.name}</h4>
-                    <p className="text-sm text-muted-foreground mt-1">{provider.desc}</p>
-                  </button>
-                ))}
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                {currentModels.map((model) => (
-                  <button
-                    key={model.id}
-                    onClick={() => updateField("model", model.id)}
-                    className={`
-                    p-4
-                    rounded-2xl
-                    border
-                    text-left
-                    transition-all
-                    hover:-translate-y-1 hover:shadow-md
-                    bg-background
-                    ${
-                      formData.model === model.id
-                        ? "border-primary bg-primary/5"
-                        : "border-border hover:border-primary/50"
-                    }
-                  `}
-                  >
-                    {model.name}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {step === 3 && (
-            <div className="animate-message">
-              <div className="flex items-center gap-3 mb-8">
-                <Brain className="text-primary" />
-                <h3 className="text-2xl font-bold">Knowledge</h3>
-              </div>
-
-              <div className="grid grid-cols-3 gap-4 mb-8">
-                {EMBEDDING_MODELS.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => !item.disabled && updateField("embedding_model", item.id)}
-                    disabled={item.disabled}
-                    className={`
-                    p-5
-                    rounded-3xl
-                    border
-                    text-left
-                    transition-all
-                    ${!item.disabled ? "hover:-translate-y-1 hover:shadow-md" : ""}
-                    bg-background
-                    ${
-                      item.disabled
-                        ? "opacity-50 cursor-not-allowed border-border"
-                        : formData.embedding_model === item.id
-                        ? "border-primary bg-primary/5"
-                        : "border-border hover:border-primary/50"
-                    }
-                  `}
-                  >
-                    <h4 className="font-semibold">{item.name}</h4>
-                    {item.disabled && (
-                      <p className="text-xs text-orange-500 mt-1 font-medium">Coming Soon</p>
-                    )}
-                  </button>
-                ))}
-              </div>
-
-              <Select
-                value={formData.chunk_strategy}
-                onValueChange={(value) => updateField("chunk_strategy", value)}
-              >
-                <SelectTrigger className="w-full h-14">
-                  <SelectValue placeholder="Select Strategy" />
-                </SelectTrigger>
-                <SelectContent>
-                  {CHUNKING_STRATEGIES.map((strategy) => (
-                    <SelectItem key={strategy.id} value={strategy.id}>
-                      {strategy.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <div className="mt-8 p-5 rounded-3xl border border-border bg-background flex items-center justify-between">
-                <div>
-                  <h4 className="font-semibold flex items-center gap-2">
-                    <Globe size={18} className="text-primary" />
-                    Web Search Fallback
-                  </h4>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    Allow the agent to search the internet if the answer isn't in its documents.
-                  </p>
-                </div>
-                <Switch 
-                  checked={formData.web_search_enabled}
-                  onCheckedChange={(checked) => updateField("web_search_enabled", checked)}
-                />
-              </div>
-            </div>
-          )}
-
-          {step === 4 && (
-            <div className="animate-message">
-              <div className="flex items-center gap-3 mb-8">
-                <FileText className="text-primary" />
-                <h3 className="text-2xl font-bold">Instructions</h3>
-              </div>
-
-              <textarea
-                rows={10}
-                value={formData.system_prompt}
-                onChange={(event) =>
-                  updateField("system_prompt", event.target.value)
-                }
-                placeholder="You are a helpful assistant..."
-                className="
-                w-full
-                rounded-3xl
-                border
-                border-border
-                bg-background
-                text-foreground
-                p-5
-                mb-6
-              "
-              />
-
-              <label className="font-medium block mb-2 mt-4 text-indigo-500 flex items-center gap-2">
-                <Code size={16} /> Output Format Instructions
-              </label>
-              <textarea
-                rows={4}
-                value={formData.output_format}
-                onChange={(event) =>
-                  updateField("output_format", event.target.value)
-                }
-                placeholder="Always respond in valid JSON format..."
-                className="
-                w-full
-                rounded-3xl
-                border
-                border-indigo-500/30
-                bg-indigo-500/5
-                text-foreground
-                p-5
-                mb-6
-              "
-              />
-
-              {selectedModel?.requiresKey && (
-                <div className="relative">
-                  <Key
-                    size={18}
-                    className="
-                    absolute
-                    left-4
-                    top-4
-                    text-slate-400
-                    dark:text-zinc-500
-                  "
-                  />
-
-                  <input
-                    type="password"
-                    placeholder="API Key"
-                    value={formData.api_key}
-                    onChange={(event) =>
-                      updateField("api_key", event.target.value)
-                    }
-                    className="
-                  w-full
-                  pl-12
-                  py-4
-                  rounded-2xl
-                  border
-                  border-border
-                  bg-background
-                  text-foreground
-                "
-                  />
-                </div>
-              )}
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
         {formError && (
-          <div className="px-6 pb-4 text-sm text-red-600">
+          <div className="px-8 pb-4 text-sm text-red-600 bg-card">
             {formError}
           </div>
         )}
 
-        <div className="border-t border-border p-6 flex justify-between">
+        <div className="border-t border-border p-6 bg-card flex justify-between">
           <button
             onClick={prevStep}
             disabled={step === 1 || createAgentMutation.isPending}
@@ -724,7 +735,7 @@ export default function CreateAgentWizard({ onClose, projectId = null, parentAge
             </button>
           )}
         </div>
-      </div>
-    </div>
+      </SheetContent>
+    </Sheet>
   );
 }

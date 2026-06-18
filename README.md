@@ -1,6 +1,6 @@
-# 🚀 RAGMate
+# 🚀 BlinkBot
 
-RAGMate is an enterprise-grade AI Assistant platform that allows teams to build, manage, and deploy custom Retrieval-Augmented Generation (RAG) agents. Train agents on your own custom documents, interact with them in isolated team workspaces, and seamlessly deploy them via embeddable chat widgets!
+BlinkBot is an enterprise-grade AI Assistant platform that allows teams to build, manage, and deploy custom Retrieval-Augmented Generation (RAG) agents. Train agents on your own custom documents, interact with them in isolated team workspaces, and seamlessly deploy them via embeddable chat widgets!
 
 ## ✨ Key Features
 

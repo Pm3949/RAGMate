@@ -25,7 +25,7 @@ function App() {
   }, []);
 
   if (loading) {
-    return <div className="flex min-h-screen items-center justify-center">Loading RAGMate...</div>;
+    return <div className="flex min-h-screen items-center justify-center">Loading BlinkBot...</div>;
   }
 
   if (!session) {
