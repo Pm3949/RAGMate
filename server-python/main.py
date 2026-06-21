@@ -42,7 +42,7 @@ if "*" not in allow_origins:
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allow_origins,
-    allow_credentials=True,
+    allow_credentials=False if "*" in allow_origins else True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
