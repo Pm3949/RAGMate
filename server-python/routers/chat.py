@@ -331,7 +331,10 @@ async def widget_chat(req: WidgetChatRequest, request: Request):
                 .replace("https://", "")
                 .split(":")[0]
             )
-            domains = [d.strip() for d in allowed_domains.split(",") if d.strip()]
+            domains = [
+                d.strip().replace("http://", "").replace("https://", "").split(":")[0] 
+                for d in allowed_domains.split(",") if d.strip()
+            ]
             if domains and origin not in domains:
                 raise HTTPException(status_code=403, detail="Domain not allowed")
 
