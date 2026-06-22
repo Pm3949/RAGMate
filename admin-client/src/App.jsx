@@ -261,19 +261,20 @@ export default function App() {
   return (
     <div className="min-h-screen bg-background text-foreground p-8">
       <div className="max-w-7xl mx-auto space-y-8 pb-10">
-        <div>
-          <h1 className="text-3xl font-bold flex items-center gap-3">
-            <ShieldCheck className="text-primary w-8 h-8" />
-            Super Admin Portal
-          </h1>
+        <div className="flex justify-between items-start">
+          <div>
+            <h1 className="text-3xl font-bold flex items-center gap-3">
+              <ShieldCheck className="text-primary w-8 h-8" />
+              Super Admin Portal
+            </h1>
+            <p className="text-muted-foreground mt-2">Manage the entire platform across all users and workspaces.</p>
+          </div>
           <div className="flex items-center gap-4">
             <span className="text-sm text-muted-foreground">{currentUser.email}</span>
             <button onClick={handleLogout} className="flex items-center gap-1.5 px-3 py-1.5 bg-muted hover:bg-muted/80 rounded-lg text-sm font-medium transition">
               <LogOut size={16} /> Logout
             </button>
           </div>
-        </div>
-        <p className="text-muted-foreground mt-2">Manage the entire platform across all users and workspaces.</p>
         </div>
 
         {/* Global Stats Grid */}
