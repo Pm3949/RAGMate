@@ -86,7 +86,7 @@ export default function TermsPage() {
           <section className="pt-8 border-t border-border/50">
             <h2 className="text-xl font-bold text-foreground mb-3">Contact Us</h2>
             <p>
-              If you have any questions about these Terms, please contact us at support@blinkbot.ai.
+              If you have any questions about these Terms, please contact us at support@blinkbot.in.
             </p>
           </section>
         </div>

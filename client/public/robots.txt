@@ -11,4 +11,4 @@ Disallow: /billing
 Disallow: /chat
 Disallow: /auth/
 
-Sitemap: https://blinkbot.ai/sitemap.xml
+Sitemap: https://blinkbot.in/sitemap.xml
