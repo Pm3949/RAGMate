@@ -1,24 +1,28 @@
-// client/src/supabaseClient.ts
-import { createClient } from '@supabase/supabase-js';
+// supabaseClient.ts — Supabase has been replaced by our custom Python backend.
+// This stub prevents build errors in files that still reference `supabase`.
+// All active code uses fetch() against VITE_API_BASE_URL instead.
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const noop = () => Promise.resolve({ data: null, error: null });
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Supabase URL and Anon Key are required!');
-}
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  global: {
-    fetch: async (url, options = {}) => {
-      const token = localStorage.getItem('access_token');
-      if (token) {
-        options.headers = {
-          ...options.headers,
-          Authorization: `Bearer ${token}`,
-        };
-      }
-      return fetch(url, options);
-    },
+export const supabase = {
+  auth: {
+    getSession: noop,
+    getUser: noop,
+    signOut: noop,
+    onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
   },
-});
+  from: (_table: string) => ({
+    select: () => ({ data: [], error: null }),
+    insert: () => ({ data: null, error: null }),
+    update: () => ({ data: null, error: null }),
+    delete: () => ({ data: null, error: null }),
+    eq: function() { return this; },
+    order: function() { return this; },
+    limit: function() { return this; },
+  }),
+  channel: (_name: string) => ({
+    on: function() { return this; },
+    subscribe: function() { return this; },
+  }),
+  removeChannel: noop,
+};
